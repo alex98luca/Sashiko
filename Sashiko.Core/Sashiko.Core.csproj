@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<!-- NuGet package metadata -->
+		<PackageId>Sashiko.Core</PackageId>
+		<Version>0.1.0-alpha</Version>
+		<Authors>Alexandru Luca (alex98luca)</Authors>
+		<Description>Core utilities for the Sashiko ecosystem. Provides unit conversions, shared abstractions, and foundational helpers for higher-level Sashiko packages.</Description>
+		<PackageTags>utilities; conversions; units; sashiko; core</PackageTags>
+
+		<!-- Links -->
+		<PackageProjectUrl>https://github.com/alex98luca/Sashiko</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/alex98luca/Sashiko</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+
+		<!-- License -->
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+
+		<!-- README -->
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<IncludePackageReadmeFile>true</IncludePackageReadmeFile>
+
+		<!-- Optional -->
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+</Project>
