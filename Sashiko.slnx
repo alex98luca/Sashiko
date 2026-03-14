@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="Sashiko.SystemMonitor.Tests/Sashiko.SystemMonitor.Tests.csproj" />
   <Project Path="Sashiko.SystemMonitor/Sashiko.SystemMonitor.csproj" />
 </Solution>
