@@ -33,4 +33,9 @@
 		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
+
+	<ItemGroup>
+	  <PackageReference Include="Sashiko.Core" Version="0.1.0-alpha" />
+	</ItemGroup>
+
 </Project>
