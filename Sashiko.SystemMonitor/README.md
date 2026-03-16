@@ -102,13 +102,13 @@ You can learn more in the main Sashiko repository.
 
 ## 🤝 Contributing
 Contributions are welcome!  
-If you’d like to improve SystemMonitor or propose new features, please check our [Contributing Guidelines](..\CONTRIBUTING.md).  
+If you’d like to improve SystemMonitor or propose new features, please check our [Contributing Guidelines](https://github.com/alex98luca/Sashiko/blob/master/CONTRIBUTING.md).  
 Feel free to open an issue or submit a pull request!
 
 ---
 
 ## 📄 License
 This project is licensed under the **Apache License 2.0**.  
-See the [LICENSE](..\LICENSE.txt) file for the full license text.
+See the [LICENSE](https://github.com/alex98luca/Sashiko/blob/master/LICENSE) file for the full license text.
 
 Copyright © 2026 Alexandru Luca (alex98luca)
