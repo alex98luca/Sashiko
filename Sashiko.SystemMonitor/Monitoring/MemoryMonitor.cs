@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Sashiko.Core.Conversions;
+using Sashiko.Core.Models.Enums;
 using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
@@ -30,12 +32,11 @@ namespace Sashiko.SystemMonitor.Monitoring
 			if (!GlobalMemoryStatusEx(ref mem))
 				return new MemoryInfo(0, 0, 0, 0);
 
-			double total = mem.ullTotalPhys / 1024.0 / 1024.0 / 1024.0;
-			double available = mem.ullAvailPhys / 1024.0 / 1024.0 / 1024.0;
+			double total = MemoryConverter.Convert(mem.ullTotalPhys, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
+			double available = MemoryConverter.Convert(mem.ullAvailPhys, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
 			double usedBySystem = total - available;
 
-			double usedByCurrentProcess = Process.GetCurrentProcess().WorkingSet64
-				/ 1024.0 / 1024.0 / 1024.0;
+			double usedByCurrentProcess = MemoryConverter.Convert(Process.GetCurrentProcess().WorkingSet64, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
 
 			return new MemoryInfo(total, available, usedBySystem, usedByCurrentProcess);
 		}
@@ -80,14 +81,28 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				var memInfo = File.ReadAllLines("/proc/meminfo");
 
-				double total = ParseMeminfo(memInfo, "MemTotal") / 1024.0 / 1024.0;
-				double free = ParseMeminfo(memInfo, "MemAvailable") / 1024.0 / 1024.0;
-				double usedBySystem = total - free;
+				// Values in kB → convert to bytes → convert to GB
+				double total = MemoryConverter.Convert(
+					ParseMeminfo(memInfo, "MemTotal") * 1024,
+					MemoryUnit.Bytes,
+					MemoryUnit.Gigabytes
+				);
 
-				double usedByCurrentProcess = Process.GetCurrentProcess().WorkingSet64
-					/ 1024.0 / 1024.0 / 1024.0;
+				double available = MemoryConverter.Convert(
+					ParseMeminfo(memInfo, "MemAvailable") * 1024,
+					MemoryUnit.Bytes,
+					MemoryUnit.Gigabytes
+				);
 
-				return new MemoryInfo(total, free, usedBySystem, usedByCurrentProcess);
+				double usedBySystem = total - available;
+
+				double usedByCurrentProcess = MemoryConverter.Convert(
+					Process.GetCurrentProcess().WorkingSet64,
+					MemoryUnit.Bytes,
+					MemoryUnit.Gigabytes
+				);
+
+				return new MemoryInfo(total, available, usedBySystem, usedByCurrentProcess);
 			}
 			catch
 			{
@@ -116,8 +131,11 @@ namespace Sashiko.SystemMonitor.Monitoring
 				double free = GetMacFreeMemory();
 				double usedBySystem = total - free;
 
-				double usedByCurrentProcess = Process.GetCurrentProcess().WorkingSet64
-					/ 1024.0 / 1024.0 / 1024.0;
+				double usedByCurrentProcess = MemoryConverter.Convert(
+					Process.GetCurrentProcess().WorkingSet64,
+					MemoryUnit.Bytes,
+					MemoryUnit.Gigabytes
+				);
 
 				return new MemoryInfo(total, free, usedBySystem, usedByCurrentProcess);
 			}
@@ -140,7 +158,9 @@ namespace Sashiko.SystemMonitor.Monitoring
 			var output = process?.StandardOutput.ReadToEnd()?.Trim();
 
 			if (ulong.TryParse(output, out var bytes))
-				return bytes / 1024.0 / 1024.0 / 1024.0;
+			{
+				return MemoryConverter.Convert(bytes, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
+			}
 
 			return 0;
 		}
@@ -160,7 +180,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 
 			var lines = output.Split('\n');
 
-			long pageSize = 4096; // default
+			long pageSize = 4096;
 			long freePages = 0;
 			long inactivePages = 0;
 
@@ -180,7 +200,8 @@ namespace Sashiko.SystemMonitor.Monitoring
 			}
 
 			long freeBytes = (freePages + inactivePages) * pageSize;
-			return freeBytes / 1024.0 / 1024.0 / 1024.0;
+
+			return MemoryConverter.Convert(freeBytes, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
 		}
 
 		private static long ParseVmStat(string line)

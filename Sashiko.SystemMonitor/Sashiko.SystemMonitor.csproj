@@ -7,7 +7,7 @@
 
     <!-- NuGet package metadata -->
     <PackageId>Sashiko.SystemMonitor</PackageId>
-    <Version>0.1.0-alpha</Version>
+    <Version>0.1.1-alpha</Version>
     <Authors>Alexandru Luca (alex98luca)</Authors>
     <Description>Cross-platform system monitoring library for .NET. Provides CPU, memory, disk, network, thermal, and power metrics via a unified API.</Description>
     <PackageTags>system monitor; diagnostics; cpu; memory; sashiko</PackageTags>
@@ -31,6 +31,11 @@
 
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <PackageReference Include="Sashiko.Core" Version="0.1.0-alpha" />
 	</ItemGroup>
 
 </Project>

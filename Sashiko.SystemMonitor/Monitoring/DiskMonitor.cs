@@ -1,4 +1,6 @@
-﻿using Sashiko.SystemMonitor.Models;
+﻿using Sashiko.Core.Conversions;
+using Sashiko.Core.Models.Enums;
+using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
 {
@@ -10,13 +12,14 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				// We assume the simulator runs from the primary drive
 				var drive = DriveInfo.GetDrives()
-					.FirstOrDefault(d => d.IsReady && d.RootDirectory.FullName == Path.GetPathRoot(Environment.CurrentDirectory));
+					.FirstOrDefault(d => d.IsReady &&
+						d.RootDirectory.FullName == Path.GetPathRoot(Environment.CurrentDirectory));
 
 				if (drive == null)
 					return new DiskInfo(0, 0, 0);
 
-				double total = drive.TotalSize / 1024.0 / 1024.0 / 1024.0;
-				double free = drive.AvailableFreeSpace / 1024.0 / 1024.0 / 1024.0;
+				double total = MemoryConverter.Convert(drive.TotalSize, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
+				double free = MemoryConverter.Convert(drive.AvailableFreeSpace, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
 				double used = total - free;
 
 				return new DiskInfo(total, free, used);
