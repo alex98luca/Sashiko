@@ -8,10 +8,7 @@ namespace Sashiko.Core.Data.Json
 
 		public JsonObjectLoader(JsonSerializerOptions? options = null)
 		{
-			_options = options ?? new JsonSerializerOptions
-			{
-				PropertyNameCaseInsensitive = true
-			};
+			_options = options ?? new JsonSerializerOptions();
 		}
 
 		public T Load(string json)

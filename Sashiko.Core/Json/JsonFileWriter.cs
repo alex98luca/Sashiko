@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using Sashiko.Core.Json.Options;
 
 namespace Sashiko.Core.Json
 {
@@ -19,7 +18,7 @@ namespace Sashiko.Core.Json
 
 			var json = JsonSerializer.Serialize(
 				value,
-				options ?? JsonWriteOptions.Indented
+				options ?? new JsonSerializerOptions()
 			);
 
 			File.WriteAllText(path, json);
