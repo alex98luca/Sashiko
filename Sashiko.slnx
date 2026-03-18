@@ -3,4 +3,5 @@
   <Project Path="Sashiko.Core/Sashiko.Core.csproj" />
   <Project Path="Sashiko.SystemMonitor.Tests/Sashiko.SystemMonitor.Tests.csproj" />
   <Project Path="Sashiko.SystemMonitor/Sashiko.SystemMonitor.csproj" />
+  <Project Path="Sashiko.Validation/Sashiko.Validation.csproj" />
 </Solution>
