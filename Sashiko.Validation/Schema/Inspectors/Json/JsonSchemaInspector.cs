@@ -1,95 +1,69 @@
 ﻿using System.Text.Json;
-using Sashiko.Validation.Schema.Path;
+using Sashiko.Validation.Schema.Model;
 
 namespace Sashiko.Validation.Schema.Inspectors.Json
 {
-	/// <summary>
-	/// Extracts a flattened schema representation from a JSON element.
-	/// Produces paths like "parent.child.name" for nested objects.
-	/// Handles arrays, objects, and primitives consistently.
-	/// </summary>
 	public static class JsonSchemaInspector
 	{
-		public static HashSet<string> GetSchema(JsonElement element)
+		public static SchemaNode GetSchema(JsonElement element, string? name = null)
 		{
-			var fields = new HashSet<string>(StringComparer.Ordinal);
-			var visited = new HashSet<JsonElement>(); // recursion guard
-			InspectElement(element, prefix: "", fields, visited);
-			return fields;
-		}
-
-		// ------------------------------------------------------------
-		// Core dispatcher
-		// ------------------------------------------------------------
-		private static void InspectElement(
-			JsonElement element,
-			string prefix,
-			HashSet<string> fields,
-			HashSet<JsonElement> visited)
-		{
-			// Prevent infinite recursion (rare but possible)
-			if (visited.Contains(element))
-				return;
-
-			visited.Add(element);
-
 			switch (element.ValueKind)
 			{
 				case JsonValueKind.Object:
-					InspectObject(element, prefix, fields, visited);
-					break;
+					return BuildObjectNode(element, name);
 
 				case JsonValueKind.Array:
-					InspectArray(element, prefix, fields, visited);
-					break;
+					return BuildArrayNode(element, name);
 
 				default:
-					// Primitive → leaf
-					if (!string.IsNullOrEmpty(prefix))
-						fields.Add(prefix);
-					break;
+					return new SchemaNode(
+						name ?? "",
+						required: true,
+						kind: SchemaNodeKind.Leaf
+					);
 			}
 		}
 
-		// ------------------------------------------------------------
-		// Object inspector
-		// ------------------------------------------------------------
-		private static void InspectObject(
-			JsonElement element,
-			string prefix,
-			HashSet<string> fields,
-			HashSet<JsonElement> visited)
+		private static SchemaNode BuildObjectNode(JsonElement element, string? name)
 		{
+			var fields = new Dictionary<string, SchemaNode>();
+
 			foreach (var prop in element.EnumerateObject())
 			{
-				var path = PropertyPathBuilder.Combine(prefix, prop.Name);
-				InspectElement(prop.Value, path, fields, visited);
+				fields[prop.Name] = GetSchema(prop.Value, prop.Name);
 			}
+
+			return new SchemaNode(
+				name ?? "",
+				required: true,
+				kind: SchemaNodeKind.Object,
+				fields: fields
+			);
 		}
 
-		// ------------------------------------------------------------
-		// Array inspector
-		// ------------------------------------------------------------
-		private static void InspectArray(
-			JsonElement element,
-			string prefix,
-			HashSet<string> fields,
-			HashSet<JsonElement> visited)
+		private static SchemaNode BuildArrayNode(JsonElement element, string? name)
 		{
-			bool containsComplex = false;
-
-			foreach (var item in element.EnumerateArray())
+			// Empty array → element schema unknown → treat as leaf
+			if (!element.EnumerateArray().Any())
 			{
-				if (item.ValueKind is JsonValueKind.Object or JsonValueKind.Array)
-				{
-					containsComplex = true;
-					InspectElement(item, prefix, fields, visited);
-				}
+				return new SchemaNode(
+					name ?? "",
+					required: true,
+					kind: SchemaNodeKind.Array,
+					element: new SchemaNode("[]", required: true, kind: SchemaNodeKind.Leaf)
+				);
 			}
 
-			// Array of primitives → treat as leaf
-			if (!containsComplex && !string.IsNullOrEmpty(prefix))
-				fields.Add(prefix);
+			// Infer element schema from first element
+			var first = element.EnumerateArray().First();
+			var elementSchema = GetSchema(first, name: null);
+
+			return new SchemaNode(
+				name ?? "",
+				required: true,
+				kind: SchemaNodeKind.Array,
+				element: elementSchema
+			);
 		}
 	}
 }
