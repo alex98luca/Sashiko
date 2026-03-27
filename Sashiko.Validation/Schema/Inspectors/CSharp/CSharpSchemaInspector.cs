@@ -1,78 +1,97 @@
 ﻿using System.Reflection;
-using Sashiko.Validation.Schema.Comparison;
-using Sashiko.Validation.Schema.Path;
+using Sashiko.Validation.Schema.Model;
 
 namespace Sashiko.Validation.Schema.Inspectors.CSharp
 {
-	/// <summary>
-	/// Extracts a flattened schema representation from a C# type.
-	/// Produces paths like "Parent.Child.Name" for nested properties.
-	/// Handles collections, nullable types, and recursion safely.
-	/// </summary>
 	public static class CSharpSchemaInspector
 	{
-		public static Dictionary<string, SchemaField> GetSchema(Type type)
+		public static SchemaNode GetSchema(Type type)
 		{
 			var visited = new HashSet<Type>();
-			return GetFields(type, prefix: "", visited);
+			return BuildNode(type, name: null, required: true, visited);
 		}
 
-		private static Dictionary<string, SchemaField> GetFields(
-			Type type,
-			string prefix,
-			HashSet<Type> visited)
+		private static SchemaNode BuildNode(
+		Type type,
+		string? name,
+		bool required,
+		HashSet<Type> visited)
 		{
-			var fields = new Dictionary<string, SchemaField>(StringComparer.Ordinal);
+			// ------------------------------------------------------------
+			// Leaf types → never tracked, never recursive
+			// ------------------------------------------------------------
+			if (LeafTypeDetector.IsLeaf(type))
+			{
+				return new SchemaNode(
+					name ?? type.Name,
+					required,
+					SchemaNodeKind.Leaf);
+			}
 
 			// ------------------------------------------------------------
-			// Prevent infinite recursion on self-referencing types
+			// Collections → also never tracked as recursion roots
+			// ------------------------------------------------------------
+			if (CollectionTypeDetector.TryGetElementType(type, out var elementType))
+			{
+				var elementNode = BuildNode(
+					elementType,
+					name: elementType.Name,
+					required: true,
+					visited);
+
+				return new SchemaNode(
+					name ?? type.Name,
+					required,
+					SchemaNodeKind.Array,
+					fields: null,
+					element: elementNode);
+			}
+
+			// ------------------------------------------------------------
+			// Complex objects → recursion guard applies here
 			// ------------------------------------------------------------
 			if (visited.Contains(type))
-				return fields;
+			{
+				return new SchemaNode(
+					name ?? type.Name,
+					required,
+					SchemaNodeKind.Object,
+					fields: new Dictionary<string, SchemaNode>());
+			}
 
 			visited.Add(type);
 
-			// ------------------------------------------------------------
-			// Collections → inspect element type instead
-			// ------------------------------------------------------------
-			if (CollectionTypeDetector.TryGetElementType(type, out var elementType))
-				return GetFields(elementType, prefix, visited);
+			// Build object fields...
+			var fields = new Dictionary<string, SchemaNode>();
 
-			// ------------------------------------------------------------
-			// Inspect public instance properties
-			// ------------------------------------------------------------
 			foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
 			{
-				// Skip indexers
 				if (prop.GetIndexParameters().Length > 0)
 					continue;
 
-				// Skip unreadable properties
 				if (prop.GetMethod == null)
 					continue;
 
-				var propertyType = prop.PropertyType;
-				var name = PropertyPathBuilder.Combine(prefix, prop.Name);
-				bool isRequired = RequiredPropertyDetector.IsRequired(prop);
+				var propType = prop.PropertyType;
 
-				// --------------------------------------------------------
-				// Leaf property → add directly
-				// --------------------------------------------------------
-				if (LeafTypeDetector.IsLeaf(propertyType))
-				{
-					fields[name] = new SchemaField(name, isRequired);
-					continue;
-				}
+				bool isRequired =
+					RequiredPropertyDetector.IsRequired(prop) ||
+					(propType.IsValueType && Nullable.GetUnderlyingType(propType) == null);
 
-				// --------------------------------------------------------
-				// Complex property → recurse
-				// --------------------------------------------------------
-				var nestedPrefix = PropertyPathBuilder.Combine(prefix, prop.Name);
-				foreach (var nested in GetFields(propertyType, nestedPrefix, visited))
-					fields[nested.Key] = nested.Value;
+				var childNode = BuildNode(
+					propType,
+					name: prop.Name,
+					required: isRequired,
+					visited);
+
+				fields[prop.Name] = childNode;
 			}
 
-			return fields;
+			return new SchemaNode(
+				name ?? type.Name,
+				required,
+				SchemaNodeKind.Object,
+				fields);
 		}
 	}
 }
