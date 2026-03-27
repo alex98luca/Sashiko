@@ -2,13 +2,10 @@
 using Sashiko.Validation.Schema.Comparison;
 using Sashiko.Validation.Schema.Inspectors.CSharp;
 using Sashiko.Validation.Schema.Inspectors.Json;
+using Sashiko.Validation.Schema.Model;
 
 namespace Sashiko.Validation.Validators.Json
 {
-	/// <summary>
-	/// Validates that JSON input matches the schema of T.
-	/// Does NOT validate JSON syntax or deserialization.
-	/// </summary>
 	public sealed class JsonSchemaValidator : ISchemaValidator
 	{
 		public void Validate<T>(object input, ValidationContext? context = null)
@@ -17,76 +14,72 @@ namespace Sashiko.Validation.Validators.Json
 
 			var root = ToJsonElement(input);
 			var expected = CSharpSchemaInspector.GetSchema(typeof(T));
-			var ignoreCase = context.IgnoreCase;
 
-			// ------------------------------------------------------------
-			// Handle collections
-			// ------------------------------------------------------------
-			if (CollectionTypeDetector.TryGetElementType(typeof(T), out var elementType) &&
-				root.ValueKind == JsonValueKind.Array)
+			if (expected.Kind == SchemaNodeKind.Array)
 			{
-				var expectedElement = CSharpSchemaInspector.GetSchema(elementType);
-
-				int index = 0;
-				foreach (var item in root.EnumerateArray())
-				{
-					var actualElement = JsonSchemaInspector.GetSchema(item);
-					var diff = SchemaComparer.Compare(expectedElement, actualElement, ignoreCase);
-
-					if (!diff.IsMatch)
-						ThrowSchemaError(context.Source, diff, index);
-
-					index++;
-				}
-
+				ValidateArray(expected, root, context);
 				return;
 			}
 
-			// ------------------------------------------------------------
-			// Handle single object
-			// ------------------------------------------------------------
 			var actual = JsonSchemaInspector.GetSchema(root);
-			var diffSingle = SchemaComparer.Compare(expected, actual, ignoreCase);
+			var diff = SchemaComparer.Compare(expected, actual, context.IgnoreCase);
 
-			if (!diffSingle.IsMatch)
-				ThrowSchemaError(context.Source, diffSingle);
+			if (!diff.IsMatch)
+				ThrowSchemaError(context.Source, diff);
 		}
 
-		// ------------------------------------------------------------
-		// Input normalization
-		// ------------------------------------------------------------
-		private static JsonElement ToJsonElement(object input)
+		private void ValidateArray(SchemaNode expected, JsonElement root, ValidationContext context)
 		{
-			switch (input)
+			if (root.ValueKind != JsonValueKind.Array)
+				throw new ValidationException("Expected JSON array.");
+
+			int index = 0;
+			foreach (var item in root.EnumerateArray())
 			{
-				case JsonElement element:
-					return element;
+				var actualElement = JsonSchemaInspector.GetSchema(item);
+				var diff = SchemaComparer.Compare(expected.Element!, actualElement, context.IgnoreCase);
 
-				case string json:
-					// Parse once and keep the document alive
-					var doc = JsonDocument.Parse(json);
-					return doc.RootElement;
+				if (!diff.IsMatch)
+					ThrowSchemaErrorForArrayElement(context.Source, diff, index);
 
-				default:
-					throw new ValidationException(
-						$"Unsupported input type '{input.GetType().FullName}' for JsonSchemaValidator. " +
-						"Expected string or JsonElement.");
+				index++;
 			}
 		}
 
-		// ------------------------------------------------------------
-		// Error formatting
-		// ------------------------------------------------------------
-		private static void ThrowSchemaError(string? source, SchemaDiff diff, int? index = null)
+		private static JsonElement ToJsonElement(object input)
+		{
+			return input switch
+			{
+				JsonElement el => el,
+				string json => JsonDocument.Parse(json).RootElement,
+				_ => throw new ValidationException(
+					$"Unsupported input type '{input.GetType().FullName}' for JsonSchemaValidator. " +
+					"Expected string or JsonElement.")
+			};
+		}
+
+		private static void ThrowSchemaError(string? source, SchemaDiff diff)
 		{
 			var location = string.IsNullOrEmpty(source) ? "input" : $"'{source}'";
 
-			var prefix = index is null
-				? $"Schema mismatch in {location}."
-				: $"Schema mismatch in {location} for array element at index {index}.";
+			var message =
+				$"Schema mismatch in {location}.\n" +
+				(diff.Missing.Count > 0
+					? $"Missing required fields:\n  {string.Join("\n  ", diff.Missing)}\n"
+					: "") +
+				(diff.Extra.Count > 0
+					? $"Unexpected fields:\n  {string.Join("\n  ", diff.Extra)}\n"
+					: "");
+
+			throw new ValidationException(message);
+		}
+
+		private static void ThrowSchemaErrorForArrayElement(string? source, SchemaDiff diff, int index)
+		{
+			var location = string.IsNullOrEmpty(source) ? "input" : $"'{source}'";
 
 			var message =
-				prefix + "\n" +
+				$"Schema mismatch in {location} for array element at index {index}.\n" +
 				(diff.Missing.Count > 0
 					? $"Missing required fields:\n  {string.Join("\n  ", diff.Missing)}\n"
 					: "") +
