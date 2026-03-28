@@ -1,14 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 
-  <ItemGroup>
-    <PackageReference Include="Sashiko.Core" Version="0.2.0" />
-    <PackageReference Include="Sashiko.Validation" Version="0.1.0" />
-  </ItemGroup>
+		<!-- NuGet package metadata -->
+		<PackageId>Sashiko.Registries</PackageId>
+		<Version>0.1.0</Version>
+		<Authors>Alexandru Luca (alex98luca)</Authors>
+		<Description>
+			JSON-based registry loading utilities for the Sashiko ecosystem.
+			Provides trusted (embedded) and validated (external) loading paths,
+			schema validation integration, option-aware JSON parsing, and
+			domain-specific error semantics through RegistryLoadException.
+		</Description>
+		<PackageTags>registry; json; loader; sashiko; validation; configuration</PackageTags>
+
+		<!-- Links -->
+		<PackageProjectUrl>https://github.com/alex98luca/Sashiko</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/alex98luca/Sashiko</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+
+		<!-- License -->
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+
+		<!-- README -->
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<IncludePackageReadmeFile>true</IncludePackageReadmeFile>
+
+		<!-- Optional -->
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Sashiko.Core" Version="0.2.0" />
+		<PackageReference Include="Sashiko.Validation" Version="0.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 </Project>
