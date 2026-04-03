@@ -199,3 +199,12 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+---
+ADDITIONAL NOTICE:
+The Apache 2.0 License applies to the software source code and documentation. 
+All files located in the '/assets/' directory are EXCLUDED from the 
+Apache 2.0 License. 
+
+These assets are the intellectual property of Alexandru Luca and are 
+governed by the specific terms found in: /assets/ASSETS-LICENSE.md
