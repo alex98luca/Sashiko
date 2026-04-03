@@ -10,7 +10,7 @@ Sashiko is still at the beginning of its journey, and every contribution helps s
 ## 🧵 How to Contribute
 
 ### 1. Start a conversation
-If you have an idea, question, or proposal, feel free to open an issue.
+If you have an idea, question, or proposal, feel free to open an issue or reach out directly via email at [sashiko@alex98luca.com](mailto:sashiko@alex98luca.com).
 This helps us discuss the design, scope, and direction before you start coding.
 
 Good topics include:
@@ -27,7 +27,7 @@ Good topics include:
 Once we agree on the direction:
 
 - Fork the repository
-- Create a new branch for your work
+- Create a new branch for your work (e.g., `feature/your-feature-name`)
 - Keep changes focused and atomic
 
 Example:
@@ -88,6 +88,11 @@ If you have an idea that doesn’t fit neatly into these categories, that’s ev
 
 ---
 
+## 🎨 Assets & Branding
+Please note that while the code is open-source, the Sashiko logo and branding assets located in the `/assets` folder are protected. If you need to use them for community content, please contact us first.
+
+---
+
 ## 🌸 Code of Conduct
 Please be respectful, constructive, and kind.
 Sashiko is a welcoming space for developers of all backgrounds and experience levels.
@@ -98,4 +103,5 @@ Sashiko is a welcoming space for developers of all backgrounds and experience le
 Every contribution — big or small — helps Sashiko grow into a richer, more useful ecosystem.
 Your time, ideas, and creativity are deeply appreciated.
 
-Alex
+Alex 
+[sashiko@alex98luca.com](mailto:sashiko@alex98luca.com)
