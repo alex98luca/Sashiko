@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "Languages Update": {
+      "commandName": "Project",
+      "commandLineArgs": "languages update"
+    }
+  }
+}
