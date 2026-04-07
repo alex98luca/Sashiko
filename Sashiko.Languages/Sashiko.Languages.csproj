@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Sashiko.Registries" Version="0.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Data\**\*.*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Sashiko.Maintenance" />
+		<InternalsVisibleTo Include="Sashiko.Languages.Tests" />
+	</ItemGroup>
+
+</Project>
