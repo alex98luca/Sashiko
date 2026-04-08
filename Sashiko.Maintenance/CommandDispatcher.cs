@@ -4,6 +4,12 @@ namespace Sashiko.Maintenance
 {
 	internal static class CommandDispatcher
 	{
+		internal static readonly Dictionary<string, ICommandHandler> Handlers =
+			new(StringComparer.OrdinalIgnoreCase)
+			{
+				["languages"] = new LanguageCommandHandler()
+			};
+
 		public static async Task DispatchAsync(string[] args)
 		{
 			Console.WriteLine("Sashiko Maintenance Tool");
@@ -14,20 +20,17 @@ namespace Sashiko.Maintenance
 				return;
 			}
 
-			var category = args[0].ToLowerInvariant();
-			var command = args.Length > 1 ? args[1].ToLowerInvariant() : null;
+			var category = args[0];
+			var command = args.Length > 1 ? args[1] : null;
 
-			switch (category)
+			if (Handlers.TryGetValue(category, out var handler))
 			{
-				case "languages":
-					await LanguageCommands.DispatchAsync(command);
-					break;
-
-				default:
-					Console.WriteLine($"Unknown category: {category}");
-					PrintHelp();
-					break;
+				await handler.DispatchAsync(command);
+				return;
 			}
+
+			Console.WriteLine($"Unknown category: {category}");
+			PrintHelp();
 		}
 
 		private static void PrintHelp()
