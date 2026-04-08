@@ -2,12 +2,12 @@
 
 namespace Sashiko.Maintenance.Commands
 {
-	internal static class LanguageCommands
+	internal class LanguageCommandHandler : ICommandHandler
 	{
-		internal static Func<Task>? UpdateHook { get; set; }
+		internal Func<Task>? UpdateHook { get; set; }
 			= () => LanguageRegistryMaintenance.UpdateEmbeddedLanguagesAsync();
 
-		public static async Task DispatchAsync(string? command)
+		public async Task DispatchAsync(string? command)
 		{
 			switch (command)
 			{

@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Sashiko.Languages\Sashiko.Languages.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="Sashiko.Maintenance.Tests" />
+	</ItemGroup>
+
 </Project>
