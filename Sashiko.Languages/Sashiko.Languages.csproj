@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet package metadata -->
+    <PackageId>Sashiko.Languages</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Alexandru Luca (alex98luca)</Authors>
+    <Description>
+      Strongly-typed ISO 639‑3/2/1 language registry for the Sashiko ecosystem.
+      Provides a complete embedded dataset derived from SIL International’s ISO 639‑3 tables, 
+      with lookup utilities and a stable, immutable registry model.
+    </Description>
+    <PackageTags>languages; iso639; registry; sashiko; localization</PackageTags>
+
+    <!-- Links -->
+    <PackageProjectUrl>https://github.com/alex98luca/Sashiko</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/alex98luca/Sashiko</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- License -->
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+
+    <!-- README -->
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludePackageReadmeFile>true</IncludePackageReadmeFile>
+
+    <!-- NuGet Icon -->
+    <PackageIcon>icon.png</PackageIcon>
+
+    <!-- Optional -->
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <!-- Dependencies -->
+  <ItemGroup>
+    <PackageReference Include="Sashiko.Registries" Version="0.1.0" />
+  </ItemGroup>
+
+  <!-- Embedded JSON data -->
+  <ItemGroup>
+    <EmbeddedResource Include="Data\**\*.*" />
+  </ItemGroup>
+
+  <!-- Include README + NuGet icon in the package -->
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\assets\branding\logo\nuget-256\icon.png" Pack="true" PackagePath="icon.png" />
+  </ItemGroup>
+
+  <!-- Internal visibility -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Sashiko.Maintenance" />
+    <InternalsVisibleTo Include="Sashiko.Languages.Tests" />
+  </ItemGroup>
+
+</Project>
