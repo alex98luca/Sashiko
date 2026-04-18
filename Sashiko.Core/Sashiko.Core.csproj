@@ -7,10 +7,14 @@
 
 		<!-- NuGet package metadata -->
 		<PackageId>Sashiko.Core</PackageId>
-		<Version>0.2.0</Version>
+		<Version>0.3.0</Version>
 		<Authors>Alexandru Luca (alex98luca)</Authors>
-		<Description>Core utilities for the Sashiko ecosystem. Provides unit conversions, shared abstractions, and foundational helpers for higher-level Sashiko packages.</Description>
-		<PackageTags>utilities; conversions; units; sashiko; core</PackageTags>
+		<Description>
+			Core utilities for the Sashiko ecosystem. Provides deterministic randomization,
+			text normalization, unit conversions, shared abstractions, and foundational helpers
+			for higher-level Sashiko packages.
+		</Description>
+		<PackageTags>utilities; random; probability; text; normalization; units; sashiko; core</PackageTags>
 
 		<!-- Links -->
 		<PackageProjectUrl>https://github.com/alex98luca/Sashiko</PackageProjectUrl>
@@ -24,12 +28,17 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<IncludePackageReadmeFile>true</IncludePackageReadmeFile>
 
+		<!-- NuGet Icon -->
+		<PackageIcon>icon.png</PackageIcon>
+
 		<!-- Optional -->
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 
+	<!-- Include README + NuGet icon in the package -->
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="..\assets\branding\logo\nuget-256\icon.png" Pack="true" PackagePath="icon.png" />
 	</ItemGroup>
 
 	<!-- Internal visibility -->
