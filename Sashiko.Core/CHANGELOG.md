@@ -1,3 +1,32 @@
+# Changelog — Sashiko.Core
+
+All notable changes to this project will be documented in this file.  
+The format follows [Semantic Versioning](https://semver.org/).
+
+---
+
+## [0.3.0] - 2026-04-18
+
+### Added
+- **Randomization utilities**:
+  - `IRandomPicker` interface for deterministic, injectable random selection
+  - `RandomPicker` implementation with seeded `Random` support
+  - `ChanceUtility` (internal) for probability-based decisions
+
+- **Text utilities**:
+  - `StringNormalizer` for consistent trimming, filtering, and normalization of optional values and string collections
+
+### Testing
+- Complete test suite for:
+  - `RandomPicker` (lists, sequences, dictionaries, chance delegation)
+  - `ChanceUtility` (boundary conditions, deterministic behavior)
+  - `StringNormalizer` (optional values, collections, immutability, trimming)
+
+### Notes
+This release introduces foundational Core utilities used across the Sashiko ecosystem, enabling deterministic randomization and consistent text normalization for higher-level libraries such as **Sashiko.Names**.
+
+---
+
 ## [0.2.0] - 2026-03-18
 
 ### Added
