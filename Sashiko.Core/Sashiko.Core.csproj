@@ -32,4 +32,9 @@
 		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
+	<!-- Internal visibility -->
+	<ItemGroup>
+		<InternalsVisibleTo Include="Sashiko.Core.Tests" />
+	</ItemGroup>
+
 </Project>
