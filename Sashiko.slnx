@@ -5,6 +5,7 @@
   <Project Path="Sashiko.Languages/Sashiko.Languages.csproj" />
   <Project Path="Sashiko.Maintenance.Tests/Sashiko.Maintenance.Tests.csproj" />
   <Project Path="Sashiko.Maintenance/Sashiko.Maintenance.csproj" />
+  <Project Path="Sashiko.Names/Sashiko.Names.csproj" />
   <Project Path="Sashiko.Registries.Tests/Sashiko.Registries.Tests.csproj" />
   <Project Path="Sashiko.Registries/Sashiko.Registries.csproj" />
   <Project Path="Sashiko.SystemMonitor.Tests/Sashiko.SystemMonitor.Tests.csproj" />
