@@ -1,16 +1,17 @@
 ﻿using System.Reflection;
 using Sashiko.Core.Json.Options;
 using Sashiko.Names.Model.Data;
+using Sashiko.Names.Model.Enums;
 using Sashiko.Registries.Json;
 using Sashiko.Validation.Validators.Json;
 
 namespace Sashiko.Names.Registry
 {
-	internal sealed class NameRegistry
+	internal sealed class NameRegistry : INameRegistry
 	{
-		private readonly IReadOnlyDictionary<string, NameEntry> _entries;
+		private readonly IReadOnlyDictionary<LanguageId, NameEntry> _entries;
 
-		internal IReadOnlyDictionary<string, NameEntry> Entries => _entries;
+		internal IReadOnlyDictionary<LanguageId, NameEntry> Entries => _entries;
 
 		internal NameRegistry()
 		{
@@ -21,7 +22,7 @@ namespace Sashiko.Names.Registry
 		// EMBEDDED LOADING
 		// ------------------------------------------------------------
 
-		private static IReadOnlyDictionary<string, NameEntry> LoadEmbeddedNames()
+		private static IReadOnlyDictionary<LanguageId, NameEntry> LoadEmbeddedNames()
 		{
 			var asm = Assembly.GetExecutingAssembly();
 			var resources = asm.GetManifestResourceNames();
@@ -36,22 +37,31 @@ namespace Sashiko.Names.Registry
 				embeddedOptions: JsonReadOptions.Strict
 			);
 
-			var dict = new Dictionary<string, NameEntry>(StringComparer.OrdinalIgnoreCase);
+			var dict = new Dictionary<LanguageId, NameEntry>();
 
-			// We detect languages by folder name: Data.<lang>.names.json
+			// Detect languages by folder name: Data.<lang>.names.json
 			var nameResources = resources
 				.Where(r => r.EndsWith("names.json", StringComparison.OrdinalIgnoreCase))
 				.ToList();
 
 			foreach (var nameRes in nameResources)
 			{
-				var lang = ExtractLanguageCode(nameRes);
+				var iso = ExtractLanguageCode(nameRes);
+
+				// Convert ISO → enum
+				if (!Enum.TryParse<LanguageId>(iso, ignoreCase: true, out var lang))
+				{
+					throw new InvalidOperationException(
+						$"Unsupported language '{iso}' found in embedded resources. " +
+						$"Add it to LanguageId enum or remove the folder."
+					);
+				}
 
 				var rulesRes = nameRes.Replace("names.json", "rules.json");
 
 				if (!resources.Contains(rulesRes))
 					throw new InvalidOperationException(
-						$"Missing rules.json for language '{lang}' (expected: '{rulesRes}').");
+						$"Missing rules.json for language '{iso}' (expected: '{rulesRes}').");
 
 				// Load names.json
 				var poolJson = ReadResource(asm, nameRes);
@@ -81,7 +91,6 @@ namespace Sashiko.Names.Registry
 			// Example: Sashiko.Names.Data.ita.names.json
 			var parts = resourceName.Split('.');
 
-			// Find the segment before "names"
 			for (int i = 0; i < parts.Length - 1; i++)
 			{
 				if (parts[i + 1].Equals("names", StringComparison.OrdinalIgnoreCase))
@@ -96,16 +105,16 @@ namespace Sashiko.Names.Registry
 		// PUBLIC API
 		// ------------------------------------------------------------
 
-		public NameEntry Get(string iso639_3)
+		public NameEntry Get(LanguageId language)
 		{
-			if (!_entries.TryGetValue(iso639_3, out var entry))
-				throw new KeyNotFoundException($"Name entry '{iso639_3}' not found in NameRegistry.");
+			if (!_entries.TryGetValue(language, out var entry))
+				throw new KeyNotFoundException($"Name entry '{language}' not found in NameRegistry.");
 
 			return entry;
 		}
 
-		public bool TryGet(string iso639_3, out NameEntry entry)
-			=> _entries.TryGetValue(iso639_3, out entry);
+		public bool TryGet(LanguageId language, out NameEntry entry)
+			=> _entries.TryGetValue(language, out entry);
 
 		public IEnumerable<NameEntry> All => _entries.Values;
 	}

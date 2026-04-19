@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Sashiko.Core" Version="0.3.0" />
     <PackageReference Include="Sashiko.Registries" Version="0.1.0" />
   </ItemGroup>
 

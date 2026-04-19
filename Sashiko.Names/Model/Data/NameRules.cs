@@ -8,49 +8,42 @@ namespace Sashiko.Names.Model.Data
 		// ------------------------------------------------------------
 		// Given Names
 		// ------------------------------------------------------------
-
-		/// <summary>
-		/// Minimum number of given names typically used in this culture.
-		/// </summary>
 		public int GivenNameCountMin { get; }
-
-		/// <summary>
-		/// Maximum number of given names typically used in this culture.
-		/// </summary>
 		public int GivenNameCountMax { get; }
-
-		/// <summary>
-		/// Probability of selecting a unisex name when generating a given name.
-		/// </summary>
 		public double UnisexFirstNameProbability { get; }
 
-		/// <summary>
-		/// Whether this culture uses patronymics (e.g., Russian).
-		/// </summary>
+		// ------------------------------------------------------------
+		// Patronymics
+		// ------------------------------------------------------------
 		public bool UsesPatronymic { get; }
-
 		public string? PatronymicPatternMale { get; }
 		public string? PatronymicPatternFemale { get; }
+		public double PatronymicProbability { get; }
+
+		// ------------------------------------------------------------
+		// Matronymics
+		// ------------------------------------------------------------
+		public bool UsesMatronymic { get; }
+		public string? MatronymicPatternMale { get; }
+		public string? MatronymicPatternFemale { get; }
+		public double MatronymicProbability { get; }
 
 		// ------------------------------------------------------------
 		// Surnames
 		// ------------------------------------------------------------
-
 		public bool UsesDoubleLastName { get; }
 		public double DoubleLastNameProbability { get; }
 
-		public bool GenderedLastNames { get; }
+		public bool UsesGenderedLastNames { get; }
 
 		// ------------------------------------------------------------
 		// Name Order
 		// ------------------------------------------------------------
-
 		public NameOrder Order { get; }
 
 		// ------------------------------------------------------------
 		// Prefixes / Suffixes
 		// ------------------------------------------------------------
-
 		public bool AllowPrefixes { get; }
 		public double PrefixProbability { get; }
 
@@ -65,9 +58,14 @@ namespace Sashiko.Names.Model.Data
 			bool usesPatronymic,
 			string? patronymicPatternMale,
 			string? patronymicPatternFemale,
+			double patronymicProbability,
+			bool usesMatronymic,
+			string? matronymicPatternMale,
+			string? matronymicPatternFemale,
+			double matronymicProbability,
 			bool usesDoubleLastName,
 			double doubleLastNameProbability,
-			bool genderedLastNames,
+			bool usesGenderedLastNames,
 			NameOrder order,
 			bool allowPrefixes,
 			double prefixProbability,
@@ -76,17 +74,22 @@ namespace Sashiko.Names.Model.Data
 		{
 			GivenNameCountMin = givenNameCountMin;
 			GivenNameCountMax = givenNameCountMax;
-
 			UnisexFirstNameProbability = unisexFirstNameProbability;
 
 			UsesPatronymic = usesPatronymic;
 			PatronymicPatternMale = patronymicPatternMale;
 			PatronymicPatternFemale = patronymicPatternFemale;
+			PatronymicProbability = patronymicProbability;
+
+			UsesMatronymic = usesMatronymic;
+			MatronymicPatternMale = matronymicPatternMale;
+			MatronymicPatternFemale = matronymicPatternFemale;
+			MatronymicProbability = matronymicProbability;
 
 			UsesDoubleLastName = usesDoubleLastName;
 			DoubleLastNameProbability = doubleLastNameProbability;
 
-			GenderedLastNames = genderedLastNames;
+			UsesGenderedLastNames = usesGenderedLastNames;
 
 			Order = order;
 

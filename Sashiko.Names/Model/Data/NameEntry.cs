@@ -1,7 +1,9 @@
-﻿namespace Sashiko.Names.Model.Data
+﻿using Sashiko.Names.Model.Enums;
+
+namespace Sashiko.Names.Model.Data
 {
 	internal sealed record NameEntry(
-		string Iso639_3,
+		LanguageId Language,
 		NamePool Pool,
 		NameRules Rules
 	);

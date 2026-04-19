@@ -8,6 +8,11 @@ namespace Sashiko.Names.Model.Data
 		public IReadOnlyList<string> FemaleFirstNames { get; }
 		public IReadOnlyList<string> UnisexFirstNames { get; }
 
+		// NEW: Gendered surname support
+		public IReadOnlyList<string> MaleLastNames { get; }
+		public IReadOnlyList<string> FemaleLastNames { get; }
+
+		// Fallback / non‑gendered surnames
 		public IReadOnlyList<string> LastNames { get; }
 
 		public IReadOnlyList<string> Prefixes { get; }
@@ -18,6 +23,8 @@ namespace Sashiko.Names.Model.Data
 			IReadOnlyList<string> maleFirstNames,
 			IReadOnlyList<string> femaleFirstNames,
 			IReadOnlyList<string> unisexFirstNames,
+			IReadOnlyList<string> maleLastNames,
+			IReadOnlyList<string> femaleLastNames,
 			IReadOnlyList<string> lastNames,
 			IReadOnlyList<string> prefixes,
 			IReadOnlyList<string> suffixes)
@@ -26,6 +33,8 @@ namespace Sashiko.Names.Model.Data
 			FemaleFirstNames = femaleFirstNames;
 			UnisexFirstNames = unisexFirstNames;
 
+			MaleLastNames = maleLastNames;
+			FemaleLastNames = femaleLastNames;
 			LastNames = lastNames;
 
 			Prefixes = prefixes;
