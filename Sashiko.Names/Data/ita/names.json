@@ -1,0 +1,10 @@
+{
+  "MaleFirstNames": [ "Alessandro", "Luca", "Matteo", "Marco", "Giovanni" ],
+  "FemaleFirstNames": [ "Giulia", "Sofia", "Aurora", "Chiara", "Francesca" ],
+  "UnisexFirstNames": [ "Andrea" ],
+  "MaleLastNames": [],
+  "FemaleLastNames": [],
+  "LastNames": [ "Rossi", "Bianchi", "Romano", "Ferrari", "Esposito" ],
+  "Prefixes": [],
+  "Suffixes": []
+}

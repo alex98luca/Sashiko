@@ -1,6 +1,6 @@
 ﻿namespace Sashiko.Names.Model.Enums
 {
-	internal enum LanguageId
+	public enum LanguageId
 	{
 		Ita,
 		Ron,

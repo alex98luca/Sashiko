@@ -1,0 +1,10 @@
+{
+  "MaleFirstNames": [ "Andrei", "Mihai", "Alexandru", "Stefan", "Vlad" ],
+  "FemaleFirstNames": [ "Ioana", "Elena", "Maria", "Ana", "Daria" ],
+  "UnisexFirstNames": [],
+  "MaleLastNames": [],
+  "FemaleLastNames": [],
+  "LastNames": [ "Popescu", "Ionescu", "Dumitrescu", "Stan", "Marin" ],
+  "Prefixes": [],
+  "Suffixes": []
+}

@@ -1,6 +1,6 @@
 ﻿namespace Sashiko.Names.Model.Enums
 {
-	internal enum Sex
+	public enum Sex
 	{
 		Male,
 		Female

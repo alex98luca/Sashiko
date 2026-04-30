@@ -11,4 +11,12 @@
     <PackageReference Include="Sashiko.Registries" Version="0.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Data\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Sashiko.Names.Tests" />
+  </ItemGroup>
+
 </Project>

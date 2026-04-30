@@ -1,0 +1,10 @@
+{
+  "MaleFirstNames": [ "Ivan", "Dmitri", "Alexei", "Mikhail", "Nikolai" ],
+  "FemaleFirstNames": [ "Anna", "Maria", "Sofia", "Elena", "Natalia" ],
+  "UnisexFirstNames": [],
+  "MaleLastNames": [ "Ivanov", "Petrov", "Sokolov", "Smirnov", "Volkov" ],
+  "FemaleLastNames": [ "Ivanova", "Petrova", "Sokolova", "Smirnova", "Volkova" ],
+  "LastNames": [ "Ivanov", "Petrov", "Sokolov", "Smirnov", "Volkov" ],
+  "Prefixes": [],
+  "Suffixes": []
+}

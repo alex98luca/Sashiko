@@ -91,7 +91,7 @@ namespace Sashiko.Names.Registry
 			// Example: Sashiko.Names.Data.ita.names.json
 			var parts = resourceName.Split('.');
 
-			for (int i = 0; i < parts.Length - 1; i++)
+			for (int i = parts.Length - 2; i >= 0; i--)
 			{
 				if (parts[i + 1].Equals("names", StringComparison.OrdinalIgnoreCase))
 					return parts[i].ToLowerInvariant();
@@ -113,7 +113,7 @@ namespace Sashiko.Names.Registry
 			return entry;
 		}
 
-		public bool TryGet(LanguageId language, out NameEntry entry)
+		public bool TryGet(LanguageId language, out NameEntry? entry)
 			=> _entries.TryGetValue(language, out entry);
 
 		public IEnumerable<NameEntry> All => _entries.Values;

@@ -1,0 +1,10 @@
+{
+  "MaleFirstNames": [ "Alejandro", "Carlos", "Diego", "Javier", "Mateo" ],
+  "FemaleFirstNames": [ "Lucia", "Sofia", "Valeria", "Carmen", "Isabella" ],
+  "UnisexFirstNames": [],
+  "MaleLastNames": [],
+  "FemaleLastNames": [],
+  "LastNames": [ "Garcia", "Martinez", "Rodriguez", "Lopez", "Hernandez" ],
+  "Prefixes": [],
+  "Suffixes": []
+}
