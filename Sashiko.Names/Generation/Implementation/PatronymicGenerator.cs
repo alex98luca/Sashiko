@@ -40,12 +40,12 @@ namespace Sashiko.Names.Generation.Implementation
 			};
 		}
 
-		private static string? ApplyPattern(string baseName, string? pattern)
+		private static string? ApplyPattern(string fatherName, string? pattern)
 		{
 			if (pattern is null)
 				return null;
 
-			return pattern.Replace("{name}", baseName);
+			return pattern.Replace("{father}", fatherName);
 		}
 	}
 }
