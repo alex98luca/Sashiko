@@ -1,10 +1,10 @@
 {
-  "MaleFirstNames": [ "Ivan", "Dmitri", "Alexei", "Mikhail", "Nikolai" ],
-  "FemaleFirstNames": [ "Anna", "Maria", "Sofia", "Elena", "Natalia" ],
+  "MaleFirstNames": [ "Ivan", "Dmitri", "Alexei", "Mikhail", "Nikolai", "Alexander", "Sergei", "Andrei", "Vladimir", "Pavel", "Maxim", "Kirill", "Roman", "Artem", "Yuri", "Oleg", "Igor", "Viktor", "Denis", "Anton", "Boris", "Gleb", "Ilya", "Leonid", "Matvei", "Nikita", "Pyotr", "Ruslan", "Stanislav", "Timofei", "Vadim", "Vasili", "Yevgeny", "Fyodor", "Grigory", "Konstantin", "Lev", "Semyon", "Valery", "Yaroslav" ],
+  "FemaleFirstNames": [ "Anna", "Maria", "Sofia", "Elena", "Natalia", "Anastasia", "Ekaterina", "Olga", "Tatiana", "Irina", "Svetlana", "Yulia", "Daria", "Polina", "Ksenia", "Alina", "Viktoria", "Valeria", "Galina", "Marina", "Lyudmila", "Nadezhda", "Oksana", "Raisa", "Tamara", "Veronika", "Yelena", "Zoya", "Larisa", "Margarita", "Nina", "Taisiya", "Varvara", "Vera", "Yana", "Kristina", "Lidia", "Milana", "Evgenia", "Alla" ],
   "UnisexFirstNames": [],
-  "MaleLastNames": [ "Ivanov", "Petrov", "Sokolov", "Smirnov", "Volkov" ],
-  "FemaleLastNames": [ "Ivanova", "Petrova", "Sokolova", "Smirnova", "Volkova" ],
-  "LastNames": [ "Ivanov", "Petrov", "Sokolov", "Smirnov", "Volkov" ],
+  "MaleLastNames": [ "Ivanov", "Petrov", "Sokolov", "Smirnov", "Volkov", "Kuznetsov", "Popov", "Vasiliev", "Novikov", "Fedorov", "Morozov", "Mikhailov", "Orlov", "Pavlov", "Semenov", "Golubev", "Vinogradov", "Bogdanov", "Vorobev", "Frolov", "Lebedev", "Kozlov", "Stepanov", "Nikolaev", "Egorov", "Zaitsev", "Soloviev", "Borisov", "Yakovlev", "Grigoriev", "Romanov", "Sergeev", "Kiselev", "Makarov", "Andreev", "Gusev", "Titov", "Karpov", "Belyaev", "Komarov" ],
+  "FemaleLastNames": [ "Ivanova", "Petrova", "Sokolova", "Smirnova", "Volkova", "Kuznetsova", "Popova", "Vasilieva", "Novikova", "Fedorova", "Morozova", "Mikhailova", "Orlova", "Pavlova", "Semenova", "Golubeva", "Vinogradova", "Bogdanova", "Vorobeva", "Frolova", "Lebedeva", "Kozlova", "Stepanova", "Nikolaeva", "Egorova", "Zaitseva", "Solovieva", "Borisova", "Yakovleva", "Grigorieva", "Romanova", "Sergeeva", "Kiseleva", "Makarova", "Andreeva", "Guseva", "Titova", "Karpova", "Belyaeva", "Komarova" ],
+  "LastNames": [ "Ivanov", "Petrov", "Sokolov", "Smirnov", "Volkov", "Kuznetsov", "Popov", "Vasiliev", "Novikov", "Fedorov", "Morozov", "Mikhailov", "Orlov", "Pavlov", "Semenov", "Golubev", "Vinogradov", "Bogdanov", "Vorobev", "Frolov", "Lebedev", "Kozlov", "Stepanov", "Nikolaev", "Egorov", "Zaitsev", "Soloviev", "Borisov", "Yakovlev", "Grigoriev", "Romanov", "Sergeev", "Kiselev", "Makarov", "Andreev", "Gusev", "Titov", "Karpov", "Belyaev", "Komarov" ],
   "Prefixes": [],
   "Suffixes": []
 }

@@ -1,0 +1,10 @@
+{
+  "MaleFirstNames": [ "Aron", "Bjarni", "Bjorn", "Daniel", "Einar", "Emil", "Eirikur", "Finnur", "Gisli", "Gudmundur", "Gunnar", "Hakon", "Halldor", "Hannes", "Haraldur", "Helgi", "Hjalti", "Ingvar", "Isak", "Jakob", "Johann", "Jon", "Kristjan", "Magnus", "Njal", "Olafur", "Orri", "Pall", "Ragnar", "Sigurdur", "Stefan", "Sveinn", "Thor", "Tomas", "Tryggvi", "Viktor", "Vilhjalmur", "Asgeir", "Benedikt", "Kari" ],
+  "FemaleFirstNames": [ "Agnes", "Anna", "Arna", "Astrid", "Birna", "Brynja", "Dagny", "Elin", "Embla", "Eva", "Freydis", "Gudrun", "Halla", "Helga", "Hildur", "Ida", "Inga", "Ingibjorg", "Johanna", "Jona", "Katrin", "Kristin", "Lilja", "Margret", "Rakel", "Ragnheidur", "Sara", "Sigridur", "Sigrun", "Solveig", "Steinunn", "Sunna", "Thora", "Unnur", "Valdis", "Vigdis", "Yrsa", "Asa", "Berglind", "Eydis" ],
+  "UnisexFirstNames": [],
+  "MaleLastNames": [],
+  "FemaleLastNames": [],
+  "LastNames": [ "Blondal", "Briem", "Benediktsson", "Egilsson", "Einarsson", "Eiriksson", "Finnsson", "Gislason", "Gudmundsson", "Gunnarsson", "Halldorsson", "Haraldsson", "Helgason", "Hjaltason", "Ingvarsson", "Jakobsson", "Johannsson", "Jonsson", "Kristjansson", "Magnusson", "Olafsson", "Palsson", "Ragnarsson", "Sigurdsson", "Stefansson", "Sveinsson", "Thorarinsson", "Tomasson", "Viktorsson", "Asgeirsson", "Benediktsdottir", "Einarsdottir", "Eiriksdottir", "Finnsdottir", "Gisladottir", "Gudmundsdottir", "Gunnarsdottir", "Halldorsdottir", "Jonsdottir", "Magnusdottir" ],
+  "Prefixes": [],
+  "Suffixes": []
+}

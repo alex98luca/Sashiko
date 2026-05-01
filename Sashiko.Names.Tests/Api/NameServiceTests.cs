@@ -16,10 +16,7 @@ namespace Sashiko.Names.Tests.Api
 		}
 
 		[Theory]
-		[InlineData(LanguageId.Ita, Sex.Male)]
-		[InlineData(LanguageId.Ron, Sex.Female)]
-		[InlineData(LanguageId.Rus, Sex.Male)]
-		[InlineData(LanguageId.Spa, Sex.Female)]
+		[MemberData(nameof(SupportedLanguageSexCombinations))]
 		public void Generate_ShouldReturnUsablePersonName(LanguageId language, Sex sex)
 		{
 			var name = _service.Generate(sex, language);
@@ -58,6 +55,16 @@ namespace Sashiko.Names.Tests.Api
 		}
 
 		[Fact]
+		public void Generate_ShouldUseMatronymicLanguage()
+		{
+			var male = _service.Generate(Sex.Male, LanguageId.Isl, motherName: "Anna");
+			var female = _service.Generate(Sex.Female, LanguageId.Isl, motherName: "Anna");
+
+			Assert.Contains("Annason", male.FullName);
+			Assert.Contains("Annadottir", female.FullName);
+		}
+
+		[Fact]
 		public void Service_PublicApi_ShouldOnlyExposeGenerate()
 		{
 			var publicMethods = typeof(NameService)
@@ -68,5 +75,14 @@ namespace Sashiko.Names.Tests.Api
 
 			Assert.Equal(new[] { "Generate" }, publicMethods);
 		}
+
+		public static IEnumerable<object[]> SupportedLanguageSexCombinations()
+			=> Enum.GetValues<LanguageId>()
+				.Where(language => language != LanguageId.Random)
+				.SelectMany(language => new[]
+				{
+					new object[] { language, Sex.Male },
+					new object[] { language, Sex.Female }
+				});
 	}
 }

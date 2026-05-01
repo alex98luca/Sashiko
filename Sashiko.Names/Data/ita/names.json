@@ -1,10 +1,10 @@
 {
-  "MaleFirstNames": [ "Alessandro", "Luca", "Matteo", "Marco", "Giovanni" ],
-  "FemaleFirstNames": [ "Giulia", "Sofia", "Aurora", "Chiara", "Francesca" ],
+  "MaleFirstNames": [ "Alessandro", "Luca", "Matteo", "Marco", "Giovanni", "Francesco", "Leonardo", "Lorenzo", "Gabriele", "Andrea", "Riccardo", "Tommaso", "Edoardo", "Federico", "Antonio", "Giuseppe", "Davide", "Simone", "Nicola", "Filippo", "Pietro", "Vincenzo", "Salvatore", "Daniele", "Stefano", "Michele", "Fabio", "Roberto", "Paolo", "Claudio", "Giacomo", "Emanuele", "Samuele", "Cristian", "Alberto", "Massimo", "Dario", "Enrico", "Raffaele", "Luigi" ],
+  "FemaleFirstNames": [ "Giulia", "Sofia", "Aurora", "Chiara", "Francesca", "Giorgia", "Martina", "Alessia", "Alice", "Sara", "Elena", "Emma", "Greta", "Beatrice", "Anna", "Valentina", "Laura", "Silvia", "Federica", "Elisa", "Irene", "Camilla", "Vittoria", "Arianna", "Gaia", "Marta", "Noemi", "Serena", "Claudia", "Paola", "Roberta", "Veronica", "Eleonora", "Caterina", "Cristina", "Daniela", "Lucia", "Monica", "Simona", "Rachele" ],
   "UnisexFirstNames": [ "Andrea" ],
   "MaleLastNames": [],
   "FemaleLastNames": [],
-  "LastNames": [ "Rossi", "Bianchi", "Romano", "Ferrari", "Esposito" ],
+  "LastNames": [ "Rossi", "Bianchi", "Romano", "Ferrari", "Esposito", "Ricci", "Marino", "Greco", "Bruno", "Gallo", "Conti", "De Luca", "Costa", "Giordano", "Mancini", "Rizzo", "Lombardi", "Moretti", "Barbieri", "Fontana", "Santoro", "Mariani", "Rinaldi", "Caruso", "Ferrara", "Galli", "Martini", "Leone", "Longo", "Gentile", "Martinelli", "Vitale", "Lombardo", "Serra", "Coppola", "De Santis", "D'Angelo", "Bianco", "Amato", "Pellegrini" ],
   "Prefixes": [],
   "Suffixes": []
 }

@@ -2,6 +2,7 @@
 {
 	public enum LanguageId
 	{
+		Isl,
 		Ita,
 		Ron,
 		Rus,

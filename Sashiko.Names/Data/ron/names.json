@@ -1,10 +1,10 @@
 {
-  "MaleFirstNames": [ "Andrei", "Mihai", "Alexandru", "Stefan", "Vlad" ],
-  "FemaleFirstNames": [ "Ioana", "Elena", "Maria", "Ana", "Daria" ],
+  "MaleFirstNames": [ "Andrei", "Mihai", "Alexandru", "Stefan", "Vlad", "Ion", "George", "Florin", "Cristian", "Daniel", "Gabriel", "Adrian", "Marius", "Ionut", "Radu", "Bogdan", "Catalin", "Sorin", "Claudiu", "Valentin", "Constantin", "Nicolae", "Razvan", "Tudor", "Dragos", "Ciprian", "Lucian", "Eduard", "Victor", "Robert", "Marian", "Dumitru", "Liviu", "Paul", "Silviu", "Emil", "Octavian", "Cosmin", "Calin", "Teodor" ],
+  "FemaleFirstNames": [ "Ioana", "Elena", "Maria", "Ana", "Daria", "Andreea", "Alexandra", "Gabriela", "Cristina", "Mihaela", "Daniela", "Alina", "Raluca", "Irina", "Roxana", "Oana", "Diana", "Laura", "Madalina", "Simona", "Monica", "Adriana", "Florina", "Camelia", "Claudia", "Georgiana", "Anca", "Larisa", "Teodora", "Bianca", "Denisa", "Nicoleta", "Sorina", "Valentina", "Iulia", "Lavinia", "Carmen", "Corina", "Paula", "Ramona" ],
   "UnisexFirstNames": [],
   "MaleLastNames": [],
   "FemaleLastNames": [],
-  "LastNames": [ "Popescu", "Ionescu", "Dumitrescu", "Stan", "Marin" ],
+  "LastNames": [ "Popescu", "Ionescu", "Dumitrescu", "Stan", "Marin", "Dobre", "Nistor", "Gheorghe", "Stoica", "Radu", "Munteanu", "Matei", "Tudor", "Diaconu", "Constantin", "Dinu", "Georgescu", "Ilie", "Preda", "Moldovan", "Barbu", "Neagu", "Toma", "Lazar", "Sava", "Mocanu", "Voicu", "Sandu", "Serban", "Dragomir", "Cristea", "Enache", "Miron", "Oprea", "Pavel", "Balan", "Dima", "Badea", "Coman", "Florea" ],
   "Prefixes": [],
   "Suffixes": []
 }

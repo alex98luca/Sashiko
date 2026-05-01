@@ -130,6 +130,28 @@ namespace Sashiko.Names.Tests.Data
 		}
 
 		[Fact]
+		public void EmbeddedPools_ShouldContainAtLeastOneHundredNamesPerLanguage()
+		{
+			var registry = new NameRegistry();
+
+			foreach (var entry in registry.All)
+			{
+				var uniqueNames = entry.Pool.MaleFirstNames
+					.Concat(entry.Pool.FemaleFirstNames)
+					.Concat(entry.Pool.UnisexFirstNames)
+					.Concat(entry.Pool.MaleLastNames)
+					.Concat(entry.Pool.FemaleLastNames)
+					.Concat(entry.Pool.LastNames)
+					.Distinct(StringComparer.OrdinalIgnoreCase)
+					.Count();
+
+				Assert.True(
+					uniqueNames >= 100,
+					$"{entry.Language} should contain at least 100 unique names, but contains {uniqueNames}.");
+			}
+		}
+
+		[Fact]
 		public void EmbeddedRules_ShouldContainValidGenerationSettings()
 		{
 			var registry = new NameRegistry();

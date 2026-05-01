@@ -1,0 +1,21 @@
+{
+  "GivenNameCountMin": 1,
+  "GivenNameCountMax": 2,
+  "UnisexFirstNameProbability": 0,
+  "UsesPatronymic": false,
+  "PatronymicPatternMale": null,
+  "PatronymicPatternFemale": null,
+  "PatronymicProbability": 0,
+  "UsesMatronymic": true,
+  "MatronymicPatternMale": "{mother}son",
+  "MatronymicPatternFemale": "{mother}dottir",
+  "MatronymicProbability": 1,
+  "UsesDoubleLastName": false,
+  "DoubleLastNameProbability": 0,
+  "UsesGenderedLastNames": false,
+  "Order": "FirstLast",
+  "AllowPrefixes": false,
+  "PrefixProbability": 0,
+  "AllowSuffixes": false,
+  "SuffixProbability": 0
+}

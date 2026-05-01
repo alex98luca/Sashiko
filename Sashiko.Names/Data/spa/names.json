@@ -1,10 +1,10 @@
 {
-  "MaleFirstNames": [ "Alejandro", "Carlos", "Diego", "Javier", "Mateo" ],
-  "FemaleFirstNames": [ "Lucia", "Sofia", "Valeria", "Carmen", "Isabella" ],
+  "MaleFirstNames": [ "Alejandro", "Carlos", "Diego", "Javier", "Mateo", "Jose", "Juan", "Luis", "Miguel", "Antonio", "Manuel", "Francisco", "Pedro", "Pablo", "Sergio", "Fernando", "Rafael", "Alberto", "Andres", "Daniel", "David", "Eduardo", "Emilio", "Gabriel", "Hector", "Hugo", "Jorge", "Julian", "Marcos", "Mario", "Nicolas", "Oscar", "Raul", "Ricardo", "Roberto", "Rodrigo", "Samuel", "Tomas", "Victor", "Adrian" ],
+  "FemaleFirstNames": [ "Lucia", "Sofia", "Valeria", "Carmen", "Isabella", "Maria", "Ana", "Laura", "Marta", "Paula", "Elena", "Claudia", "Patricia", "Cristina", "Andrea", "Sara", "Julia", "Natalia", "Alicia", "Beatriz", "Carla", "Daniela", "Eva", "Gabriela", "Ines", "Irene", "Jimena", "Lidia", "Lorena", "Marina", "Nerea", "Noelia", "Raquel", "Rosa", "Silvia", "Teresa", "Victoria", "Adriana", "Alba", "Veronica" ],
   "UnisexFirstNames": [],
   "MaleLastNames": [],
   "FemaleLastNames": [],
-  "LastNames": [ "Garcia", "Martinez", "Rodriguez", "Lopez", "Hernandez" ],
+  "LastNames": [ "Garcia", "Martinez", "Rodriguez", "Lopez", "Hernandez", "Gonzalez", "Perez", "Sanchez", "Ramirez", "Torres", "Flores", "Rivera", "Gomez", "Diaz", "Cruz", "Morales", "Ortiz", "Reyes", "Ramos", "Castillo", "Vargas", "Jimenez", "Mendoza", "Ruiz", "Aguilar", "Navarro", "Romero", "Serrano", "Delgado", "Castro", "Medina", "Iglesias", "Vega", "Herrera", "Campos", "Cabrera", "Soto", "Rojas", "Molina", "Fuentes" ],
   "Prefixes": [],
   "Suffixes": []
 }
