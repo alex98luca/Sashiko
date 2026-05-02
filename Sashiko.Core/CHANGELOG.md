@@ -5,6 +5,16 @@ The format follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.3.1] - 2026-05-03
+
+### Testing
+- Refined `StringNormalizer` tests to remove repeated inline expected arrays reported by SonarQube/Roslyn analysis.
+
+### Notes
+This patch release does not change the public API or runtime behavior of **Sashiko.Core**. It keeps the package aligned with the repository quality gate before moving toward automated NuGet releases.
+
+---
+
 ## [0.3.0] - 2026-04-18
 
 ### Added
