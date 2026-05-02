@@ -4,6 +4,8 @@ namespace Sashiko.Core.Tests.Text
 {
 	public sealed class StringNormalizerTests
 	{
+		private static readonly string[] ExpectedNormalizedValues = ["a", "b", "c"];
+
 		// ------------------------------------------------------------
 		// NormalizeOptional
 		// ------------------------------------------------------------
@@ -50,7 +52,7 @@ namespace Sashiko.Core.Tests.Text
 			var input = new[] { "a", " ", "b", "", "c" };
 			var result = StringNormalizer.NormalizeCollection(input);
 
-			Assert.Equal(new[] { "a", "b", "c" }, result);
+			Assert.Equal(ExpectedNormalizedValues, result);
 		}
 
 		[Fact]
@@ -59,7 +61,7 @@ namespace Sashiko.Core.Tests.Text
 			var input = new[] { "  a  ", "  b", "c  " };
 			var result = StringNormalizer.NormalizeCollection(input);
 
-			Assert.Equal(new[] { "a", "b", "c" }, result);
+			Assert.Equal(ExpectedNormalizedValues, result);
 		}
 
 		[Fact]
