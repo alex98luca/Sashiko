@@ -130,13 +130,26 @@ namespace Sashiko.Names.Tests.Data
 		}
 
 		[Fact]
-		public void EmbeddedPools_ShouldContainAtLeastOneHundredNamesPerLanguage()
+		public void EmbeddedPools_ShouldMeetReleaseCoverageFloor()
 		{
 			var registry = new NameRegistry();
 
 			foreach (var entry in registry.All)
 			{
-				var uniqueNames = entry.Pool.MaleFirstNames
+				AssertPoolCount(entry.Language, nameof(entry.Pool.MaleFirstNames), entry.Pool.MaleFirstNames, 150);
+				AssertPoolCount(entry.Language, nameof(entry.Pool.FemaleFirstNames), entry.Pool.FemaleFirstNames, 150);
+
+				if (entry.Rules.UsesGenderedLastNames)
+				{
+					AssertPoolCount(entry.Language, nameof(entry.Pool.MaleLastNames), entry.Pool.MaleLastNames, 200);
+					AssertPoolCount(entry.Language, nameof(entry.Pool.FemaleLastNames), entry.Pool.FemaleLastNames, 200);
+				}
+				else
+				{
+					AssertPoolCount(entry.Language, nameof(entry.Pool.LastNames), entry.Pool.LastNames, 200);
+				}
+
+				var uniqueCoreNames = entry.Pool.MaleFirstNames
 					.Concat(entry.Pool.FemaleFirstNames)
 					.Concat(entry.Pool.UnisexFirstNames)
 					.Concat(entry.Pool.MaleLastNames)
@@ -146,8 +159,8 @@ namespace Sashiko.Names.Tests.Data
 					.Count();
 
 				Assert.True(
-					uniqueNames >= 100,
-					$"{entry.Language} should contain at least 100 unique names, but contains {uniqueNames}.");
+					uniqueCoreNames >= 500,
+					$"{entry.Language} should contain at least 500 unique core names, but contains {uniqueCoreNames}.");
 			}
 		}
 
@@ -166,6 +179,24 @@ namespace Sashiko.Names.Tests.Data
 				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.LastNames), entry.Pool.LastNames);
 				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.Prefixes), entry.Pool.Prefixes);
 				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.Suffixes), entry.Pool.Suffixes);
+			}
+		}
+
+		[Fact]
+		public void EmbeddedPools_ShouldUseLatinReadableNameText()
+		{
+			var registry = new NameRegistry();
+
+			foreach (var entry in registry.All)
+			{
+				AssertLatinReadableValues(entry.Language, nameof(entry.Pool.MaleFirstNames), entry.Pool.MaleFirstNames);
+				AssertLatinReadableValues(entry.Language, nameof(entry.Pool.FemaleFirstNames), entry.Pool.FemaleFirstNames);
+				AssertLatinReadableValues(entry.Language, nameof(entry.Pool.UnisexFirstNames), entry.Pool.UnisexFirstNames);
+				AssertLatinReadableValues(entry.Language, nameof(entry.Pool.MaleLastNames), entry.Pool.MaleLastNames);
+				AssertLatinReadableValues(entry.Language, nameof(entry.Pool.FemaleLastNames), entry.Pool.FemaleLastNames);
+				AssertLatinReadableValues(entry.Language, nameof(entry.Pool.LastNames), entry.Pool.LastNames);
+				AssertLatinReadableValues(entry.Language, nameof(entry.Pool.Prefixes), entry.Pool.Prefixes);
+				AssertLatinReadableValues(entry.Language, nameof(entry.Pool.Suffixes), entry.Pool.Suffixes);
 			}
 		}
 
@@ -258,6 +289,110 @@ namespace Sashiko.Names.Tests.Data
 				values.SequenceEqual(expected, StringComparer.Ordinal),
 				$"{language}.{propertyName} should be alphabetically sorted and unique.");
 		}
+
+		private static void AssertPoolCount(
+			LanguageId language,
+			string propertyName,
+			IReadOnlyList<string> values,
+			int minimum)
+		{
+			Assert.True(
+				values.Count >= minimum,
+				$"{language}.{propertyName} should contain at least {minimum} values, but contains {values.Count}.");
+		}
+
+		private static void AssertLatinReadableValues(
+			LanguageId language,
+			string propertyName,
+			IReadOnlyList<string> values)
+		{
+			foreach (var value in values)
+			{
+				Assert.True(
+					IsLatinReadableNameText(value),
+					$"{language}.{propertyName} contains non-Latin-readable name text: '{value}'.");
+			}
+		}
+
+		private static bool IsLatinReadableNameText(string value)
+			=> value.All(IsLatinReadableNameCharacter);
+
+		private static bool IsLatinReadableNameCharacter(char character)
+			=> AllowedLatinReadableNameCharacters.Contains(character)
+				|| IsAsciiLatinLetter(character);
+
+		private static bool IsAsciiLatinLetter(char character)
+			=> character is >= 'A' and <= 'Z'
+				or >= 'a' and <= 'z';
+
+		private static readonly HashSet<char> AllowedLatinReadableNameCharacters =
+			[
+				' ',
+				'\'',
+				'-',
+				'À',
+				'Á',
+				'Â',
+				'Ã',
+				'Ä',
+				'Å',
+				'Ç',
+				'È',
+				'É',
+				'Ê',
+				'Ë',
+				'Ì',
+				'Í',
+				'Î',
+				'Ï',
+				'Ñ',
+				'Ò',
+				'Ó',
+				'Ô',
+				'Õ',
+				'Ö',
+				'Ù',
+				'Ú',
+				'Û',
+				'Ü',
+				'Ý',
+				'à',
+				'á',
+				'â',
+				'ã',
+				'ä',
+				'å',
+				'ç',
+				'è',
+				'é',
+				'ê',
+				'ë',
+				'ì',
+				'í',
+				'î',
+				'ï',
+				'ñ',
+				'ò',
+				'ó',
+				'ô',
+				'õ',
+				'ö',
+				'ù',
+				'ú',
+				'û',
+				'ü',
+				'ý',
+				'Ă',
+				'Â',
+				'Î',
+				'Ș',
+				'Ț',
+				'ă',
+				'â',
+				'î',
+				'ș',
+				'ț'
+			];
 
 		private static void AssertProbability(double probability)
 		{
