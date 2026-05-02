@@ -16,13 +16,13 @@ consumers of the Sashiko libraries.
 From the root of the repository:
 
 ```bash
-dotnet run --project src/Sashiko.Maintenance -- <category> <command>
+dotnet run --project Sashiko.Maintenance -- <category> <command>
 ```
 
 Example:
 
 ```bash
-dotnet run --project src/Sashiko.Maintenance -- languages update
+dotnet run --project Sashiko.Maintenance -- languages update
 ```
 
 ---
@@ -40,22 +40,38 @@ The tool uses a simple two‑level command structure:
 | Category  |	Description |
 |-----------|---------------|
 | `languages` |	Maintains the embedded language registry |
+| `names` |	Maintains the embedded name registries |
 
 #### `languages` Commands
 | Command | Description |
 |---------|-------------|
 | `update`|	Downloads and regenerates the embedded languages.json file |
 
+#### `names` Commands
+| Command | Description |
+|---------|-------------|
+| `polish` | Sorts and deduplicates every embedded names.json file |
+
 
 Example:
 
 ```bash
-dotnet run --project src/Sashiko.Maintenance -- languages update
+dotnet run --project Sashiko.Maintenance -- languages update
 ```
 
 This command fetches the ISO 639‑3 registry, parses it, maps it to the
 Sashiko language model, and writes the updated JSON file into the
 `Sashiko.Languages` project.
+
+Example:
+
+```bash
+dotnet run --project Sashiko.Maintenance -- names polish
+```
+
+This command reads every `names.json` file under the `Sashiko.Names/Data`
+folder, trims values, removes blank or duplicate entries, sorts each array
+alphabetically, and writes the polished data back as clean indented JSON.
 
 ## ✨ Architecture Overview
 The maintenance tool is built around three core concepts:

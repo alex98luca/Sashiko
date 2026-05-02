@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Sashiko.Names.Tests" />
+    <InternalsVisibleTo Include="Sashiko.Maintenance" />
   </ItemGroup>
 
 </Project>

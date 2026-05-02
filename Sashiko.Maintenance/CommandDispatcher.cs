@@ -7,7 +7,8 @@ namespace Sashiko.Maintenance
 		internal static readonly Dictionary<string, ICommandHandler> Handlers =
 			new(StringComparer.OrdinalIgnoreCase)
 			{
-				["languages"] = new LanguageCommandHandler()
+				["languages"] = new LanguageCommandHandler(),
+				["names"] = new NamesCommandHandler()
 			};
 
 		public static async Task DispatchAsync(string[] args)
@@ -37,6 +38,7 @@ namespace Sashiko.Maintenance
 		{
 			Console.WriteLine("Usage:");
 			Console.WriteLine("  languages update");
+			Console.WriteLine("  names polish");
 		}
 	}
 }

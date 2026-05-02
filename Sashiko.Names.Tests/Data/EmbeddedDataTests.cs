@@ -152,6 +152,24 @@ namespace Sashiko.Names.Tests.Data
 		}
 
 		[Fact]
+		public void EmbeddedPools_ShouldBeSortedAndUnique()
+		{
+			var registry = new NameRegistry();
+
+			foreach (var entry in registry.All)
+			{
+				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.MaleFirstNames), entry.Pool.MaleFirstNames);
+				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.FemaleFirstNames), entry.Pool.FemaleFirstNames);
+				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.UnisexFirstNames), entry.Pool.UnisexFirstNames);
+				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.MaleLastNames), entry.Pool.MaleLastNames);
+				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.FemaleLastNames), entry.Pool.FemaleLastNames);
+				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.LastNames), entry.Pool.LastNames);
+				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.Prefixes), entry.Pool.Prefixes);
+				AssertSortedAndUnique(entry.Language, nameof(entry.Pool.Suffixes), entry.Pool.Suffixes);
+			}
+		}
+
+		[Fact]
 		public void EmbeddedRules_ShouldContainValidGenerationSettings()
 		{
 			var registry = new NameRegistry();
@@ -223,6 +241,22 @@ namespace Sashiko.Names.Tests.Data
 				Assert.False(string.IsNullOrWhiteSpace(value));
 				Assert.Equal(value, value.Trim());
 			}
+		}
+
+		private static void AssertSortedAndUnique(
+			LanguageId language,
+			string propertyName,
+			IReadOnlyList<string> values)
+		{
+			var expected = values
+				.Distinct(StringComparer.InvariantCultureIgnoreCase)
+				.OrderBy(value => value, StringComparer.InvariantCultureIgnoreCase)
+				.ThenBy(value => value, StringComparer.Ordinal)
+				.ToArray();
+
+			Assert.True(
+				values.SequenceEqual(expected, StringComparer.Ordinal),
+				$"{language}.{propertyName} should be alphabetically sorted and unique.");
 		}
 
 		private static void AssertProbability(double probability)
