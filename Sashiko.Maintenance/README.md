@@ -1,4 +1,4 @@
-# Sashiko Maintenance Tool
+# 🌸 Sashiko Maintenance Tool
 
 The **Sashiko Maintenance Tool** is a small command‑line utility used to
 maintain and regenerate embedded data for the Sashiko ecosystem.  
@@ -31,27 +31,26 @@ dotnet run --project Sashiko.Maintenance -- languages update
 
 The tool uses a simple two‑level command structure:
 
-```Code
+```text
 <category> <command>
 ```
 
 ### Available Categories
 
-| Category  |	Description |
-|-----------|---------------|
-| `languages` |	Maintains the embedded language registry |
-| `names` |	Maintains the embedded name registries |
+| Category | Description |
+|----------|-------------|
+| `languages` | Maintains the embedded language registry |
+| `names` | Maintains the embedded name registries |
 
 #### `languages` Commands
 | Command | Description |
 |---------|-------------|
-| `update`|	Downloads and regenerates the embedded languages.json file |
+| `update` | Downloads and regenerates the embedded `languages.json` file |
 
 #### `names` Commands
 | Command | Description |
 |---------|-------------|
-| `polish` | Sorts and deduplicates every embedded names.json file |
-
+| `polish` | Sorts and deduplicates every embedded `names.json` file |
 
 Example:
 
@@ -72,6 +71,8 @@ dotnet run --project Sashiko.Maintenance -- names polish
 This command reads every `names.json` file under the `Sashiko.Names/Data`
 folder, trims values, removes blank or duplicate entries, sorts each array
 alphabetically, and writes the polished data back as clean indented JSON.
+
+---
 
 ## ✨ Architecture Overview
 The maintenance tool is built around three core concepts:
@@ -146,11 +147,9 @@ Handlers["cultures"] = new CultureCommandHandler();
 ---
 
 ## 🤝 Contributing
-Contributions are welcome!  
-If you’d like to improve the maintenance tool or propose new features, please see the  
-[CONTRIBUTING.md](../CONTRIBUTING.md) file in the repository root.
 
-Feel free to open an issue or submit a pull request!
+Contributions are welcome.  
+Please see [CONTRIBUTING.md](../CONTRIBUTING.md) in the repository root.
 
 ---
 

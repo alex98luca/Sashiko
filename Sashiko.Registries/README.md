@@ -1,66 +1,20 @@
-# Sashiko.Registries
+# 🌸 Sashiko.Registries
 
-**Sashiko.Registries** provides a lightweight, expressive, and predictable foundation for loading structured registry data in Sashiko‑based applications.
-It is designed for ecosystems that rely on declarative, JSON‑driven registries — such as languages, names, biomes, items, or any domain where structured data defines behavior.
+**Sashiko.Registries** provides lightweight helpers for loading structured registry data from JSON.
 
-This library focuses on:
-
-- **Clear boundaries** between trusted (embedded) and untrusted (external) data
-- **Consistent validation semantics** powered by `ISchemaValidator`
-- **Option‑aware JSON loading** using `System.Text.Json`
-- **Rich diagnostics** through `RegistryLoadException` and `ValidationContext`
-- **Composable, future‑proof abstractions** for additional formats (YAML, TOML, etc.)
-
-It is intentionally small, focused, and designed to be extended.
+It is designed for packages and applications that rely on declarative data: languages, names, biomes, items, rules, or any domain where structured data defines behavior.
 
 ---
 
 ## ✨ Features
 
-### Two loading modes
-
-- **Embedded loading**
-    
-    Fast, trusted, and unwrapped. Ideal for internal resources shipped with the application.
-
-- **External loading**
-    
-    Validated, safe, and wrapped in RegistryLoadException for predictable error handling.
-
-### Schema validation
-
-External JSON is validated using an `ISchemaValidator`, which receives a rich `ValidationContext` including:
-
-- Source file name
-- Case‑sensitivity settings
-- JSON options
-- Registry type
-- Arbitrary metadata
-
-### Option‑aware JSON parsing
-
-Both object and list loaders respect:
-
-- `AllowTrailingCommas`
-- `ReadCommentHandling`
-- `PropertyNameCaseInsensitive`
-- Any other `JsonSerializerOptions` you provide
-
-### Custom exception type
-
-`RegistryLoadException` provides:
-
-- A clear signal that the failure occurred during registry loading
-- The source file
-- The registry type
-- The underlying exception
-
-### Symmetric loaders
-
-- `JsonRegistryObjectLoader<T>`
-- `JsonRegistryListLoader<T>`
-
-Both follow the same semantics, making the API predictable and easy to reason about.
+- JSON object registry loader
+- JSON list registry loader
+- Separate loading behavior for trusted embedded data and untrusted external data
+- Schema validation integration through `ISchemaValidator`
+- Option-aware JSON parsing with `System.Text.Json`
+- Predictable `RegistryLoadException` wrapping for external input failures
+- Clear source/type diagnostics for easier debugging
 
 ---
 
@@ -70,142 +24,98 @@ Both follow the same semantics, making the API predictable and easy to reason ab
 dotnet add package Sashiko.Registries
 ```
 
-## 🚀 Quick Start
+---
 
-### 1. Implement a schema validator
+## 🚀 Usage
+
+### Create a registry loader
 
 ```csharp
-public sealed class MySchemaValidator : ISchemaValidator
-{
-    public void Validate<T>(object input, ValidationContext? context = null)
+using System.Text.Json;
+using Sashiko.Registries.Json;
+using Sashiko.Validation.Validators.Json;
+
+var loader = new JsonRegistryObjectLoader<MyRegistryEntry>(
+    schemaValidator: new JsonSchemaValidator(),
+    embeddedOptions: new JsonSerializerOptions
     {
-        // Validate JSON against your schema
-        // Throw ValidationException on failure
-    }
-}
+        PropertyNameCaseInsensitive = false
+    },
+    externalOptions: new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true,
+        AllowTrailingCommas = true
+    });
 ```
 
-### 2. Create a registry loader
+### Load trusted embedded JSON
 
 ```csharp
-var validator = new MySchemaValidator();
-
-var loader = new JsonRegistryObjectLoader<MyModel>(
-    schemaValidator: validator,
-    embeddedOptions: new JsonSerializerOptions { PropertyNameCaseInsensitive = true },
-    externalOptions: new JsonSerializerOptions { AllowTrailingCommas = true }
-);
+var entry = loader.LoadEmbedded(json, "MyRegistryEntry.json");
 ```
 
-### 3. Load embedded or external JSON
-
-```csharp
-var model = loader.LoadEmbedded(jsonString, "MyModel.json");
-```
+### Load and validate external JSON
 
 ```csharp
 try
 {
-    var model = loader.LoadExternal(jsonString, "MyModel.json");
+    var entry = loader.LoadExternal(json, "MyRegistryEntry.json");
 }
 catch (RegistryLoadException ex)
 {
-    Console.WriteLine($"Failed to load registry: {ex.SourceName}");
+    Console.WriteLine($"Failed to load registry data from {ex.SourceName}");
 }
 ```
 
-## 🧩 API Overview
-
-### `JsonRegistryObjectLoader<T>`
-
-Loads a single JSON object.
-
-- `LoadEmbedded(string json, string source)`
-- `LoadExternal(string json, string source)`
-
-### `JsonRegistryListLoader<T>`
-
-Loads a JSON array of objects.
-
-- `LoadEmbedded(string json, string source)`
-- `LoadExternal(string json, string source)`
-
-### `RegistryLoadException`
-
-Thrown when external JSON fails:
-
-- format validation
-- deserialization
-
-Schema validation errors (`ValidationException`) are not wrapped.
-
 ---
 
-## 🛡 Error Model
+## 🛡️ Error Model
 
-| Scenario                 | Exception              |
-|--------------------------|------------------------|
-| Embedded JSON invalid    | `JsonException`        |
-| External JSON invalid    | `RegistryLoadException` |
-| Schema mismatch          | `ValidationException`  |
-| Deserialization failure  | `RegistryLoadException` |
+| Scenario | Exception |
+|----------|-----------|
+| Embedded JSON invalid | `JsonException` |
+| External JSON invalid | `RegistryLoadException` |
+| External schema mismatch | `ValidationException` |
+| External deserialization failure | `RegistryLoadException` |
 
-This model is intentional: embedded JSON is trusted, external JSON is not.
+Embedded data is treated as trusted package data. External data is validated and wrapped so callers can handle registry-loading failures consistently.
 
 ---
 
 ## 🧪 Testing
-The test suite documents the intended behavior:
 
-- embedded vs external semantics
+The test suite covers:
+
+- embedded vs external loading behavior
 - JSON option inheritance
 - trailing comma handling
 - schema validation integration
-- ValidationContext metadata
-- RegistryLoadException wrapping
-
-Tests are written to be expressive and behavior‑driven, mirroring the design of the library.
+- validation context metadata
+- exception wrapping semantics
 
 ---
 
-## 🧱 Roadmap
-Sashiko.Registries is the foundation for future registry modules:
+## 🗺️ Roadmap
 
-- `Sashiko.Registries.Languages`
-- `Sashiko.Registries.Names`
+Future versions may include:
 
-Future enhancements may include:
-
-- YAML/TOML/XML loaders
-- Built‑in schema validators
-- Registry composition utilities
-- Source‑mapped diagnostics
-
----
-
-## ❤️ Philosophy
-Sashiko.Registries is built on a few core principles:
-
-- **Clarity over cleverness**
-- **Predictability over magic**
-- **Explicit boundaries**
-- **Expressive error semantics**
-- **Composable abstractions**
-- **A focus on developer experience**
-
-Every artifact — code, tests, documentation — is crafted to feel intentional.
+- additional structured-data formats
+- richer registry composition helpers
+- source-mapped diagnostics
+- built-in validator integrations
 
 ---
 
 ## 🤝 Contributing
-Contributions are welcome!  
-If you’d like to improve SystemMonitor or propose new features, please check our [Contributing Guidelines](https://github.com/alex98luca/Sashiko/blob/master/CONTRIBUTING.md).  
-Feel free to open an issue or submit a pull request!
+
+Contributions are welcome.  
+Please see [CONTRIBUTING.md](../CONTRIBUTING.md) in the repository root.
 
 ---
 
 ## 📄 License
+
 This project is licensed under the **Apache License 2.0**.  
-See the [LICENSE](https://github.com/alex98luca/Sashiko/blob/master/LICENSE) file for the full license text.
+See [LICENSE](../LICENSE) for the full license text.
 
 Copyright © 2026 Alexandru Luca (alex98luca)

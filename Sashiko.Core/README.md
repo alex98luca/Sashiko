@@ -1,21 +1,20 @@
-# Sashiko.Core
+# 🌸 Sashiko.Core
 
-**Sashiko.Core** is the foundational utility library of the Sashiko ecosystem.  
-It provides lightweight, reusable building blocks designed to support higher‑level Sashiko packages such as `Sashiko.SystemMonitor`.
+**Sashiko.Core** is the foundational utility package of the Sashiko ecosystem.
 
-This package focuses on **unit conversions**, **common abstractions**, and **shared helpers** that are useful across multiple domains.
+It provides small, reusable building blocks used by higher-level Sashiko packages: conversions, JSON file helpers, text normalization, probability helpers, and shared primitives.
 
 ---
 
 ## ✨ Features
 
-- Strongly‑typed unit conversion APIs  
-- Enum‑based conversion system for clarity and extensibility  
-- Memory conversions (Bytes, KB, MB, GB, TB)  
-- Bandwidth conversions (Bits, Kb, Mb, Gb)  
-- Round‑trip safe and fully tested  
-- Zero dependencies  
-- Cross‑platform and .NET‑friendly
+- Strongly typed memory conversions
+- Strongly typed bandwidth conversions
+- JSON file read/write helpers
+- Text normalization helpers
+- Probability utilities and random selection helpers
+- Lightweight environment/runtime information
+- Zero external dependencies
 
 ---
 
@@ -25,7 +24,9 @@ This package focuses on **unit conversions**, **common abstractions**, and **sha
 dotnet add package Sashiko.Core
 ```
 
-## 🔧 Usage
+---
+
+## 🚀 Usage
 
 ### Memory conversions
 
@@ -33,52 +34,65 @@ dotnet add package Sashiko.Core
 using Sashiko.Core.Conversions;
 using Sashiko.Core.Models.Enums;
 
-double gb = MemoryConverter.Convert(1024, MemoryUnit.Megabytes, MemoryUnit.Gigabytes);
-// gb == 1.0
+var gigabytes = MemoryConverter.Convert(
+    1024,
+    MemoryUnit.Megabytes,
+    MemoryUnit.Gigabytes);
+
+Console.WriteLine(gigabytes); // 1
 ```
 
 ### Bandwidth conversions
+
 ```csharp
 using Sashiko.Core.Conversions;
 using Sashiko.Core.Models.Enums;
 
-double mbps = BandwidthConverter.Convert(1000, BandwidthUnit.Kilobits, BandwidthUnit.Megabits);
-// mbps == 1.0
+var megabits = BandwidthConverter.Convert(
+    1000,
+    BandwidthUnit.Kilobits,
+    BandwidthUnit.Megabits);
+
+Console.WriteLine(megabits); // 1
 ```
+
+---
 
 ## 🧪 Testing
-All conversion logic is covered by a dedicated test suite under:
 
-```code
-Sashiko.Core.Tests/Conversions
-```
-
-Tests include:
+The test suite covers:
 
 - identity conversions
-- cross‑unit conversions
-- round‑trip conversions
-- tolerance‑based floating‑point validation
+- cross-unit conversions
+- round-trip conversions
+- JSON file read/write behavior
+- registry snapshot helpers
+- probability helpers
+- text normalization
 
-## 🧱 Roadmap
-Future versions of Sashiko.Core may include:
+---
 
-- Temperature conversions
-- Time and duration utilities
-- Human‑friendly formatting helpers
-- Additional numeric abstractions
+## 🗺️ Roadmap
+
+Future versions may include:
+
+- temperature conversions
+- time and duration helpers
+- human-readable formatting helpers
+- additional numeric abstractions
 
 ---
 
 ## 🤝 Contributing
-Contributions are welcome!  
-If you’d like to improve SystemMonitor or propose new features, please check our [Contributing Guidelines](https://github.com/alex98luca/Sashiko/blob/master/CONTRIBUTING.md).  
-Feel free to open an issue or submit a pull request!
+
+Contributions are welcome.  
+Please see [CONTRIBUTING.md](../CONTRIBUTING.md) in the repository root.
 
 ---
 
 ## 📄 License
+
 This project is licensed under the **Apache License 2.0**.  
-See the [LICENSE](https://github.com/alex98luca/Sashiko/blob/master/LICENSE) file for the full license text.
+See [LICENSE](../LICENSE) for the full license text.
 
 Copyright © 2026 Alexandru Luca (alex98luca)
