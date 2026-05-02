@@ -7,7 +7,7 @@
 
 		<!-- NuGet package metadata -->
 		<PackageId>Sashiko.Core</PackageId>
-		<Version>0.3.0</Version>
+		<Version>0.3.1</Version>
 		<Authors>Alexandru Luca (alex98luca)</Authors>
 		<Description>
 			Core utilities for the Sashiko ecosystem. Provides deterministic randomization,
