@@ -1,26 +1,24 @@
-# Sashiko.Languages
+# 🌸 Sashiko.Languages
 
-**Sashiko.Languages** provides a strongly‑typed, embedded registry of human
-languages based on the ISO 639‑3 standard.  
-It is designed for applications that need reliable, structured language
-information without depending on external services at runtime.
+**Sashiko.Languages** provides a strongly typed, embedded registry of human languages based on the ISO 639-3 standard.
 
-The library ships with a pre‑generated `languages.json` file containing all
-ISO 639‑3 language entries, mapped into the Sashiko language model.
+It is designed for applications that need reliable language metadata without calling external services at runtime.
+
+The package ships with a pre-generated `languages.json` file containing ISO 639-3 language entries mapped into the Sashiko language model.
 
 ---
 
-## 🚀 Features
+## ✨ Features
 
-- Embedded, strongly‑typed language registry
-- ISO 639‑3 coverage (including macrolanguages and special codes)
-- Case‑insensitive lookup by:
-  - ISO 639‑3 code
-  - ISO 639‑2 code (when available)
-  - ISO 639‑1 code (when available)
-  - Language name
-- Immutable, snapshot‑based registry for predictable behavior
-- Zero runtime dependencies on external data sources
+- Embedded language registry
+- ISO 639-3 coverage, including macrolanguages and special codes
+- Case-insensitive lookup by:
+  - ISO 639-3 code
+  - ISO 639-2 code when available
+  - ISO 639-1 code when available
+  - language name
+- Public `LanguageService` API
+- Zero runtime dependency on external data sources
 
 ---
 
@@ -32,28 +30,51 @@ dotnet add package Sashiko.Languages
 
 ---
 
-## 🧩 Usage
+## 🚀 Usage
 
-### Lookup by ISO 639‑3 code
+### Lookup by ISO 639-3 code
 
 ```csharp
-var lang = LanguageRegistry.Get("eng");
+using Sashiko.Languages.Api;
 
-Console.WriteLine(lang.Name); // "English"
+var service = new LanguageService();
+var language = service.GetIso3("eng");
+
+Console.WriteLine(language.Name); // English
 ```
 
-### Lookup by ISO 639‑1 code
+### Lookup by ISO 639-1 code
 
 ```csharp
-var lang = LanguageRegistry.GetByIso639_1("fr");
+using Sashiko.Languages.Api;
 
-Console.WriteLine(lang.Name); // "French"
+var service = new LanguageService();
+var language = service.GetIso1("fr");
+
+Console.WriteLine(language.Name); // French
+```
+
+### Resolve flexible input
+
+```csharp
+using Sashiko.Languages.Api;
+
+var service = new LanguageService();
+
+if (service.TryGet("Italian", out var language))
+{
+    Console.WriteLine(language.Iso639_3); // ita
+}
 ```
 
 ### Enumerate all languages
 
 ```csharp
-foreach (var language in LanguageRegistry.All)
+using Sashiko.Languages.Api;
+
+var service = new LanguageService();
+
+foreach (var language in service.All)
 {
     Console.WriteLine($"{language.Iso639_3}: {language.Name}");
 }
@@ -65,64 +86,60 @@ foreach (var language in LanguageRegistry.All)
 
 Each language entry includes:
 
-- **Iso639_3** — three‑letter ISO 639‑3 code (primary identifier)
-- **Iso639_2** — optional three‑letter ISO 639‑2 code (bibliographic/terminologic)
-- **Iso639_1** — optional two‑letter ISO 639‑1 code
-- **Name** — reference name
-- **Scope** — individual, macrolanguage, special
-- **Type** — living, extinct, ancient, constructed, etc.
+- **Iso639_3** — three-letter ISO 639-3 code and primary identifier
+- **Iso639_2** — optional three-letter ISO 639-2 code
+- **Iso639_1** — optional two-letter ISO 639-1 code
+- **Name** — reference language name
+- **Scope** — individual, macrolanguage, or special
+- **Type** — living, extinct, ancient, historical, constructed, or special
 
-The model is intentionally minimal and stable.
+The model is intentionally small and stable.
 
 ---
 
 ## 🔄 Updating the Embedded Registry
 
-The embedded languages.json file is generated using the
+The embedded language registry is maintained with the
 **Sashiko Maintenance Tool**:
 
 ```bash
-dotnet run --project src/Sashiko.Maintenance -- languages update
+dotnet run --project Sashiko.Maintenance -- languages update
 ```
 
 This process:
 
-1. Downloads the official ISO 639‑3 data from SIL International
-2. Parses the TSV files
-3. Maps them into the Sashiko language model
-4. Writes the updated `languages.json` file into this project
+1. Downloads the official ISO 639-3 data from SIL International.
+2. Parses the source TSV data.
+3. Maps it into the Sashiko language model.
+4. Writes the updated `languages.json` file into this project.
 
 The maintenance tool is internal and not required at runtime.
 
 ---
 
-## 📄 Source Attribution (Required)
+## 📄 Source Attribution
 
-The language data in this library is **derived from** the ISO 639‑3 code tables
-provided by **SIL International**.
+The language data in this library is derived from the ISO 639-3 code tables provided by **SIL International**.
 
 Required attribution:
 
-> ISO 639‑3 data © SIL International.  
+> ISO 639-3 data © SIL International.  
 > Used under the terms described at https://iso639-3.sil.org/code_tables/download_tables.
 
-This library redistributes **derived data only**.  
-It does **not** include or redistribute the original ISO 639‑3 code tables, and it does not
-provide any mechanism to download or mirror the original SIL data.
+This library redistributes derived data only. It does not include or mirror the original SIL code tables.
 
 ---
 
 ## 🤝 Contributing
-Contributions are welcome!  
-If you’d like to improve the languages library or propose new features, please see the  
-[CONTRIBUTING.md](../CONTRIBUTING.md) file in the repository root.
 
-Feel free to open an issue or submit a pull request!
+Contributions are welcome.  
+Please see [CONTRIBUTING.md](../CONTRIBUTING.md) in the repository root.
 
 ---
 
 ## 📄 License
+
 This project is licensed under the **Apache License 2.0**.  
-See the [LICENSE](../LICENSE) file for the full license text.
+See [LICENSE](../LICENSE) for the full license text.
 
 Copyright © 2026 Alexandru Luca (alex98luca)

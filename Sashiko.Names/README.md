@@ -1,4 +1,4 @@
-# Sashiko.Names
+# 🌸 Sashiko.Names
 
 **Sashiko.Names** provides an embedded, culturally aware person name generator
 for .NET applications.  
@@ -11,7 +11,7 @@ of the test suite before release.
 
 ---
 
-## 🚀 Features
+## ✨ Features
 
 - Embedded name pools and generation rules
 - Strongly typed language and sex options
@@ -36,7 +36,7 @@ dotnet add package Sashiko.Names
 
 ---
 
-## 🧩 Usage
+## 🚀 Usage
 
 ### Generate a random supported name
 

@@ -1,37 +1,26 @@
-# 📡 Sashiko.SystemMonitor
+# 🌸 Sashiko.SystemMonitor
 
-**Sashiko.SystemMonitor** is a lightweight, cross‑platform .NET library for retrieving real‑time system information such as CPU usage, memory consumption, disk activity, network throughput, and more.  
-It is the first official package of the **Sashiko** ecosystem — a growing collection of reusable utilities designed to make development faster, cleaner, and more enjoyable.
+**Sashiko.SystemMonitor** provides a lightweight snapshot API for reading basic system information from .NET applications.
 
-Sashiko.SystemMonitor provides a simple, unified API that works across Windows, Linux, and macOS, making it ideal for:
-
-- dashboards  
-- monitoring tools  
-- diagnostics  
-- simulations  
-- performance analysis  
-- custom engines  
-- prototyping  
+It is useful for diagnostics, local dashboards, development tooling, and applications that need a simple view of the current machine.
 
 ---
 
 ## ✨ Features
 
-- Cross‑platform system monitoring  
-- CPU usage (per core and total)  
-- Memory usage (available, used, total)  
-- Disk usage and activity  
-- Network throughput  
-- Battery information (when available)  
-- Snapshot‑based API for easy polling  
-- Zero external dependencies  
-- Lightweight and modular  
+- Operating system information
+- CPU model, core count, load, and clock data
+- GPU information when available
+- Memory totals and process usage
+- Disk totals and free/used space
+- Thermal information when available
+- Power and battery information when available
+- Snapshot-based API
+- Zero external dependencies
 
 ---
 
-## 🚀 Getting Started
-
-### Install via NuGet
+## 📦 Installation
 
 ```bash
 dotnet add package Sashiko.SystemMonitor
@@ -39,76 +28,73 @@ dotnet add package Sashiko.SystemMonitor
 
 ---
 
-## 📊 Basic Usage
+## 🚀 Usage
 
 ```csharp
-using Sashiko.SystemMonitor;
+using Sashiko.SystemMonitor.Snapshot;
 
-// Create a monitor instance
-var monitor = new SystemMonitor();
+var snapshot = SystemSnapshotProvider.Capture();
 
-// Retrieve a snapshot
-var snapshot = monitor.GetSnapshot();
-
-// Access system metrics
-Console.WriteLine($"CPU Usage: {snapshot.Cpu.TotalUsagePercent}%");
-Console.WriteLine($"Memory Used: {snapshot.Memory.UsedMegabytes} MB");
-Console.WriteLine($"Disk Read: {snapshot.Disk.ReadBytesPerSecond} B/s");
-Console.WriteLine($"Network Upload: {snapshot.Network.UploadBytesPerSecond} B/s");
+Console.WriteLine($"OS: {snapshot.Os.Family} {snapshot.Os.Version}");
+Console.WriteLine($"CPU: {snapshot.Cpu.Model}");
+Console.WriteLine($"CPU Load: {snapshot.Cpu.LoadPercent}%");
+Console.WriteLine($"Memory Used: {snapshot.Memory.UsedBySystemGB} GB");
+Console.WriteLine($"Disk Free: {snapshot.Disk.FreeGB} GB");
 ```
 
-Snapshots are lightweight and designed for periodic polling (e.g., every 250–1000 ms).
+Snapshots are designed for simple polling when you need periodic system state.
 
 ---
 
-## 🧩 API Overview
-SystemMonitor
-The main entry point.
-Provides a unified interface for retrieving system metrics.
+## 📚 Data Model
 
-SystemSnapshot
-A structured snapshot containing:
+`SystemSnapshot` contains:
 
-- Cpu
-- Memory
-- Disk
-- Network
-- Battery (when supported)
+- **Os** — operating system family, version, architecture, and mobile flag
+- **Cpu** — model, cores, load, and clock information
+- **Gpu** — vendor, model, VRAM, and load information when available
+- **Memory** — total, available, system-used, and process-used memory
+- **Disk** — total, free, and used disk space
+- **Thermal** — CPU, GPU, and system temperatures when available
+- **Power** — battery and power-state information when available
 
-Each category exposes platform‑independent properties.
+Availability and precision can vary by platform and hardware.
 
 ---
 
-## 🧪 Testing & Reliability
-Sashiko.SystemMonitor is built with clarity and reliability in mind.
-All platform‑specific logic is isolated, and the snapshot model ensures consistent behavior across operating systems.
+## 🧪 Testing
+
+The test suite verifies that snapshot capture:
+
+- does not throw
+- returns a complete snapshot structure
+- keeps model types consistent across captures
+
+Platform-specific values may differ by operating system and machine.
 
 ---
 
-## 🌸 Part of the Sashiko Ecosystem
-Sashiko is an open‑source ecosystem of modular .NET libraries designed to simplify development and accelerate prototyping.
-SystemMonitor is the first package, and many more utilities are planned:
+## 🗺️ Roadmap
 
-- Core helpers
-- Validation utilities
-- Name generators
-- Custom test kit
-- JSON and configuration helpers
-- Performance and environment tools
+Future versions may include:
 
-You can learn more in the main Sashiko repository.
+- richer network metrics
+- improved platform-specific collectors
+- historical sampling helpers
+- configurable polling utilities
 
 ---
 
 ## 🤝 Contributing
-Contributions are welcome!  
-If you’d like to improve SystemMonitor or propose new features, please check our [Contributing Guidelines](https://github.com/alex98luca/Sashiko/blob/master/CONTRIBUTING.md).  
-Feel free to open an issue or submit a pull request!
+
+Contributions are welcome.  
+Please see [CONTRIBUTING.md](../CONTRIBUTING.md) in the repository root.
 
 ---
 
 ## 📄 License
+
 This project is licensed under the **Apache License 2.0**.  
-See the [LICENSE](https://github.com/alex98luca/Sashiko/blob/master/LICENSE) file for the full license text.
+See [LICENSE](../LICENSE) for the full license text.
 
 Copyright © 2026 Alexandru Luca (alex98luca)

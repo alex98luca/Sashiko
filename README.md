@@ -1,53 +1,130 @@
-# 🌸 Sashiko — A Growing Ecosystem of Reusable .NET Utilities
+# 🌸 Sashiko
 
 <p align="center">
   <img src="./assets/branding/logo/2000x2000/full-logo.png" width="250" alt="Sashiko Logo">
 </p>
 
-Sashiko is an open‑source ecosystem of modular .NET libraries designed to make development faster, cleaner, and more enjoyable.
-Inspired by the Japanese craft of sashiko stitching – a technique built on precision, structure, and beautiful patterns – this project aims to provide developers with a collection of reusable building blocks that “stitch together” the foundations of modern applications.
+**Sashiko** is an open-source ecosystem of modular .NET libraries built to make development faster, cleaner, and more enjoyable.
+
+The project is inspired by the Japanese craft of sashiko stitching: small, precise patterns that become stronger and more useful when composed together.
+Each Sashiko package is designed to stand on its own, while also fitting into a larger set of reusable tools for data-rich applications, simulations, and creative software projects.
 
 ---
 
-## 🧵 Current Threads (v0.1.x Alpha)
-The ecosystem is currently in its early stages, focusing on the foundational patterns:
+## 🧵 Packages
 
-- **Sashiko.Core**: Essential utilities, math helpers, and shared primitives.
-- **Sashiko.Validation**: Fluent and lightweight validation logic.
-- **Sashiko.Registries**: Smart management of services and component registration.
-- **Sashiko.SystemMonitor**: Cross‑platform hardware and OS monitoring.
+| Package | Description | Status |
+|---------|-------------|--------|
+| **Sashiko.Core** | Shared utilities, conversions, probability helpers, JSON helpers, and foundational primitives | Released |
+| **Sashiko.Registries** | JSON-backed registry loading helpers for embedded or declarative data | Released |
+| **Sashiko.Validation** | Lightweight validation and schema inspection utilities | Released |
+| **Sashiko.SystemMonitor** | Cross-platform hardware and operating-system snapshot utilities | Released |
+| **Sashiko.Languages** | Embedded ISO 639 language registry with strongly typed lookup APIs | Released |
+| **Sashiko.Names** | Embedded, culturally aware person name generator with curated language data | Released |
+| **Sashiko.Maintenance** | Internal tooling for maintaining embedded package data | Internal |
+
+---
+
+## 📦 Installation
+
+Install only the packages you need.
+
+```bash
+dotnet add package Sashiko.Names
+dotnet add package Sashiko.Languages
+dotnet add package Sashiko.Core
+```
+
+Each library is versioned and published independently so applications can adopt the ecosystem gradually.
+
+---
+
+## 🚀 Quick Examples
+
+### Generate a Person Name
+
+```csharp
+using Sashiko.Names.Api;
+using Sashiko.Names.Model.Enums;
+
+var service = new NameService();
+var name = service.Generate(Sex.Female, LanguageId.Fra);
+
+Console.WriteLine(name.FullName);
+```
+
+### Lookup a Language
+
+```csharp
+using Sashiko.Languages.Api;
+
+var service = new LanguageService();
+var language = service.GetIso3("eng");
+
+Console.WriteLine(language.Name); // English
+```
+
+---
+
+## ✨ Project Principles
+
+Sashiko packages should be:
+
+- **Modular** — each package solves a clear problem and can be adopted alone
+- **Lightweight** — runtime dependencies are kept intentional and minimal
+- **Deterministic** — embedded data is validated and maintained through tests
+- **Composable** — packages are designed to support larger systems over time
+- **Well documented** — public packages include README and changelog files
+- **Automation friendly** — repeatable maintenance and release workflows are preferred over manual steps
 
 ---
 
 ## 🗺️ Roadmap
-Sashiko is constantly growing. Upcoming modules include:
 
-- **Sashiko.Languages**: A comprehensive registry of languages based on the official **ISO 639 (SIL)** standards, filling a gap in the current .NET ecosystem.
-- **Sashiko.Names**: A cultural-aware name registry providing advanced features like random name generation based on language, culture, and gender identity.
+The current focus is simple: keep the existing packages clean, documented, tested, and easy to release.
 
----
+Future package families may include:
 
-Each Sashiko package is built to be:
-- **Lightweight** and **modular**
-- **Cross‑platform**
-- **Easy to adopt**
+- **Sashiko.Geography** — countries, regions, cities, coordinates, and geopolitical data
+- **Sashiko.People** — richer people generation, demographics, development, and life modeling
+- **Sashiko.Sports** — reusable sports simulation primitives and domain models
+- **Sashiko.Economics** — economic indicators, markets, organizations, and development systems
+- **Sashiko.Worlds** — higher-level composition primitives for larger simulation systems
 
-The goal is simple:
-to help developers around the world build faster, prototype smarter, and reuse high‑quality utilities across countless projects — from small experiments to large‑scale applications.
-
-Sashiko is just getting started, and the pattern will continue to grow.
+The long-term goal is to grow Sashiko one carefully designed package at a time, without letting the ecosystem become heavy, messy, or difficult to maintain.
 
 ---
 
-## 🚀 Get Involved
-Whether you are building a small experiment or a large-scale application, these tools are designed to accelerate your development.
+## 📚 Documentation
 
-If you'd like to contribute, please check our [CONTRIBUTING.md](./CONTRIBUTING.md) file.
+Package-level documentation lives inside each package folder:
+
+- [Sashiko.Core](./Sashiko.Core/README.md)
+- [Sashiko.Languages](./Sashiko.Languages/README.md)
+- [Sashiko.Names](./Sashiko.Names/README.md)
+- [Sashiko.Registries](./Sashiko.Registries/README.md)
+- [Sashiko.SystemMonitor](./Sashiko.SystemMonitor/README.md)
+- [Sashiko.Validation](./Sashiko.Validation/README.md)
+- [Sashiko.Maintenance](./Sashiko.Maintenance/README.md)
 
 ---
 
-## 📧 Contact & Support
-For questions, suggestions, or professional inquiries, feel free to reach out:
+## 🤝 Contributing
+
+Contributions are welcome. Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a pull request.
+
+Good contributions include:
+
+- bug fixes
+- tests
+- documentation improvements
+- package metadata improvements
+- new curated data sources
+- carefully scoped new package proposals
+
+---
+
+## 📬 Contact
 
 - **Email**: [sashiko@alex98luca.com](mailto:sashiko@alex98luca.com)
 - **Author**: Alexandru Luca (alex98luca)
@@ -56,5 +133,8 @@ For questions, suggestions, or professional inquiries, feel free to reach out:
 ---
 
 ## ⚖️ License
-Licensed under **Apache License 2.0**.  
-*Note: Branding assets in the `/assets` directory are proprietary. See [/assets/ASSETS-LICENSE.md](./assets/ASSETS-LICENSE.md) for details.*
+
+The source code is licensed under the **Apache License 2.0**.  
+See [LICENSE](./LICENSE) for the full license text.
+
+Branding assets in the `/assets` directory are proprietary. See [assets/ASSETS-LICENSE.md](./assets/ASSETS-LICENSE.md) for details.

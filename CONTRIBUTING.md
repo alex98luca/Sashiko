@@ -1,107 +1,171 @@
 # 🌸 Contributing to Sashiko
 
-Thank you for your interest in contributing to Sashiko!
-This ecosystem is built on the idea of carefully crafted utilities — small, elegant pieces that come together to support developers across countless projects. Whether you want to fix a bug, improve documentation, or propose a new library, your contribution is welcome.
+Thank you for your interest in contributing to Sashiko.
 
-Sashiko is still at the beginning of its journey, and every contribution helps shape its future.
+Sashiko is an ecosystem of small, carefully maintained .NET packages. Each package should feel useful on its own, while still sharing the same standards, tone, and engineering care as the rest of the repository.
+
+The goal is simple: keep Sashiko friendly to contribute to, pleasant to use, and clean enough that future work does not become future debt.
 
 ---
 
-## 🧵 How to Contribute
+## 💬 Start With a Conversation
 
-### 1. Start a conversation
-If you have an idea, question, or proposal, feel free to open an issue or reach out directly via email at [sashiko@alex98luca.com](mailto:sashiko@alex98luca.com).
-This helps us discuss the design, scope, and direction before you start coding.
+For non-trivial changes, please open an issue or start a discussion before writing a large patch.
 
 Good topics include:
 
-- New utility ideas
-- Improvements to existing libraries
-- Bug reports
-- Documentation suggestions
-- Performance or API design discussions
+- new package proposals
+- public API changes
+- embedded data updates
+- release automation
+- performance improvements
+- documentation improvements
+
+Small fixes, typo corrections, and focused test improvements can go straight to a pull request.
 
 ---
 
-### 2. Fork and branch
-Once we agree on the direction:
+## 🌿 Branching
 
-- Fork the repository
-- Create a new branch for your work (e.g., `feature/your-feature-name`)
-- Keep changes focused and atomic
+Create focused branches from `master`.
 
-Example:
+Recommended branch names:
 
+- `feature/package-name-short-description`
+- `fix/package-name-short-description`
+- `docs/short-description`
+- `chore/short-description`
+
+Examples:
+
+```bash
+git switch master
+git switch -c docs/repository-polish
+git switch -c feature/geography-country-registry
 ```
-git checkout -b feature/add-memory-conversion
+
+---
+
+## 🧾 Commit Style
+
+Use concise, scoped commit messages.
+
+Examples:
+
+```text
+feature(names): add French name data
+fix(languages): handle missing ISO aliases
+docs(names): add release documentation
+chore(names): prepare package metadata
+```
+
+Prefer small commits that tell a clear story. Avoid mixing generated data, package metadata, documentation, and behavior changes unless they are part of one inseparable change.
+
+---
+
+## 🛠️ Development Workflow
+
+Before opening a pull request:
+
+1. Build the affected projects.
+2. Run the affected test projects.
+3. Update README or changelog files when public behavior changes.
+4. Keep unrelated formatting and metadata churn out of the diff.
+
+Useful commands:
+
+```bash
+dotnet build Sashiko.slnx
+dotnet test Sashiko.Names.Tests/Sashiko.Names.Tests.csproj
+dotnet test Sashiko.Languages.Tests/Sashiko.Languages.Tests.csproj
+```
+
+For package release preparation, also verify packing:
+
+```bash
+dotnet pack Sashiko.Names/Sashiko.Names.csproj -c Release
 ```
 
 ---
 
-### 3. Follow the style and structure
-Sashiko aims to be:
+## 🧠 Code Guidelines
 
-- Modular
-- Lightweight
-- Consistent
-- Cross‑platform
+Sashiko code should be:
 
-Try to follow the patterns used in existing libraries:
+- simple and explicit
+- strongly typed
+- small in scope
+- easy to test
+- consistent with existing package patterns
 
-- Clear folder structure
-- Small, focused classes
-- Clean naming
-- XML documentation where useful
-- Tests for new features
+Prefer existing abstractions and helpers before adding new ones. Add comments only where they clarify non-obvious behavior.
 
 ---
 
-### 4. Write tests
-If your contribution includes code, please include tests.
-Sashiko values reliability and clarity — tests help ensure both.
+## 🧪 Tests
+
+Code changes should include tests when they affect behavior.
+
+Data packages should also include validation tests for:
+
+- schema shape
+- embedded resource availability
+- sorted and duplicate-free data
+- package-specific quality guarantees
+
+The test suite is part of the public trust story of the project.
 
 ---
 
-### 5. Submit a pull request
-When your work is ready:
+## 📚 Embedded Data Contributions
 
-- Open a PR
-- Describe what you changed and why
-- Link any related issues
-- Be open to feedback — it’s part of the craft
+Some Sashiko packages ship curated embedded data.
 
----
+When contributing data:
 
-## 🌟 What You Can Contribute
-Sashiko is an expanding ecosystem. Here are some areas where contributions are especially welcome:
+- use public civil-registration, statistical, official, or culturally reviewed sources where possible
+- document the source in the relevant package documentation
+- keep data sorted and duplicate-free
+- run the maintenance tool when one exists
+- avoid depending on third-party fake-data libraries as source material
 
-- SystemMonitor improvements (platform support, sensors, metrics)
-- Core utilities (math, probability, memory helpers, primitives)
-- Validation helpers
-- Name and content generators
-- Custom test kit utilities
-- JSON and configuration helpers
-- Performance and environment analysis tools
-- Documentation and examples
-
-If you have an idea that doesn’t fit neatly into these categories, that’s even better — Sashiko grows through creativity.
+For `Sashiko.Names`, name data must remain Latin-readable unless a future
+package explicitly supports another script as a first-class feature.
 
 ---
 
-## 🎨 Assets & Branding
-Please note that while the code is open-source, the Sashiko logo and branding assets located in the `/assets` folder are protected. If you need to use them for community content, please contact us first.
+## 🔄 Maintenance Tooling
+
+Internal data maintenance lives in `Sashiko.Maintenance`.
+
+Examples:
+
+```bash
+dotnet run --project Sashiko.Maintenance -- languages update
+dotnet run --project Sashiko.Maintenance -- names polish
+```
+
+Maintenance tooling is not required at runtime by consumer applications.
 
 ---
 
-## 🌸 Code of Conduct
-Please be respectful, constructive, and kind.
-Sashiko is a welcoming space for developers of all backgrounds and experience levels.
+## 🎨 Assets and Branding
+
+The source code is open source, but the Sashiko logo and branding assets in `/assets` are protected. If you want to use them outside this repository, please contact the maintainer first.
 
 ---
 
-## 🧡 Thank You
-Every contribution — big or small — helps Sashiko grow into a richer, more useful ecosystem.
-Your time, ideas, and creativity are deeply appreciated.
+## 🤝 Conduct
 
-Alex 
-[sashiko@alex98luca.com](mailto:sashiko@alex98luca.com)
+Be respectful, constructive, and kind.
+
+Sashiko is intended to be a serious engineering project with a welcoming community around it.
+
+---
+
+## 📬 Contact
+
+For questions, suggestions, or professional inquiries:
+
+- [sashiko@alex98luca.com](mailto:sashiko@alex98luca.com)
+- Alexandru Luca (alex98luca)
