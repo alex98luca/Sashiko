@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- NuGet package metadata -->
+    <PackageId>Sashiko.Names</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Alexandru Luca (alex98luca)</Authors>
+    <Description>
+      Culturally aware person name generator for the Sashiko ecosystem.
+      Provides embedded, curated name pools and language-specific generation rules
+      for realistic structured person names without runtime external data sources.
+    </Description>
+    <PackageTags>names; person-names; generator; faker; localization; sashiko</PackageTags>
+
+    <!-- Links -->
+    <PackageProjectUrl>https://github.com/alex98luca/Sashiko</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/alex98luca/Sashiko</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- License -->
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+
+    <!-- README -->
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludePackageReadmeFile>true</IncludePackageReadmeFile>
+
+    <!-- NuGet Icon -->
+    <PackageIcon>icon.png</PackageIcon>
+
+    <!-- Optional -->
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <!-- Dependencies -->
+  <ItemGroup>
+    <PackageReference Include="Sashiko.Core" Version="0.3.0" />
+    <PackageReference Include="Sashiko.Registries" Version="0.1.0" />
+  </ItemGroup>
+
+  <!-- Embedded data -->
+  <ItemGroup>
+    <EmbeddedResource Include="Data\**\*.*" />
+  </ItemGroup>
+
+  <!-- Include README + NuGet icon in the package -->
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\assets\branding\logo\nuget-256\icon.png" Pack="true" PackagePath="icon.png" />
+  </ItemGroup>
+
+  <!-- Internal visibility -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Sashiko.Names.Tests" />
+    <InternalsVisibleTo Include="Sashiko.Maintenance" />
+  </ItemGroup>
+
+</Project>
