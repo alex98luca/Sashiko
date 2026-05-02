@@ -1,0 +1,110 @@
+name: NuGet Release
+
+on:
+  push:
+    tags:
+      - Sashiko.*-v.*
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  DOTNET_VERSION: 10.0.x
+  NUGET_SOURCE: https://api.nuget.org/v3/index.json
+
+jobs:
+  publish:
+    name: Publish package
+    runs-on: ubuntu-latest
+    environment: release
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify tag is on master
+        run: |
+          if ! git branch --remote --contains "$GITHUB_SHA" | grep -q "origin/master"; then
+            echo "NuGet packages can only be published from tags that point to master."
+            exit 1
+          fi
+
+      - name: Resolve tagged package
+        id: package
+        run: |
+          case "$GITHUB_REF_NAME" in
+            Sashiko.Core-v.*)
+              project="Sashiko.Core/Sashiko.Core.csproj"
+              ;;
+            Sashiko.Validation-v.*)
+              project="Sashiko.Validation/Sashiko.Validation.csproj"
+              ;;
+            Sashiko.Registries-v.*)
+              project="Sashiko.Registries/Sashiko.Registries.csproj"
+              ;;
+            Sashiko.SystemMonitor-v.*)
+              project="Sashiko.SystemMonitor/Sashiko.SystemMonitor.csproj"
+              ;;
+            Sashiko.Languages-v.*)
+              project="Sashiko.Languages/Sashiko.Languages.csproj"
+              ;;
+            Sashiko.Names-v.*)
+              project="Sashiko.Names/Sashiko.Names.csproj"
+              ;;
+            *)
+              echo "Unsupported package tag: $GITHUB_REF_NAME"
+              exit 1
+              ;;
+          esac
+
+          version="${GITHUB_REF_NAME##*-v.}"
+
+          echo "project=$project" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore solution
+        run: dotnet restore Sashiko.slnx
+
+      - name: Build solution
+        run: >
+          dotnet build Sashiko.slnx
+          --configuration Release
+          --no-restore
+          --no-incremental
+          -p:ContinuousIntegrationBuild=true
+
+      - name: Test solution
+        run: >
+          dotnet test Sashiko.slnx
+          --configuration Release
+          --no-build
+          --logger "trx"
+
+      - name: Pack tagged package
+        run: >
+          dotnet pack "${{ steps.package.outputs.project }}"
+          --configuration Release
+          --output artifacts/packages
+          -p:Version="${{ steps.package.outputs.version }}"
+          -p:ContinuousIntegrationBuild=true
+
+      - name: NuGet login
+        id: nuget-login
+        uses: NuGet/login@ebc737b6fc418a6ca0073cf116ec8dc156d8b81e # v1
+        with:
+          user: alex98luca
+
+      - name: Publish tagged package
+        run: >
+          dotnet nuget push artifacts/packages/*.nupkg
+          --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}"
+          --source "${{ env.NUGET_SOURCE }}"
+          --skip-duplicate
