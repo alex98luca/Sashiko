@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: 10.0.x
+  SONAR_ORGANIZATION: alex98luca
+  SONAR_PROJECT_KEY: alex98luca_Sashiko
+
+jobs:
+  validate:
+    name: Build, test, pack, and analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Validate SonarQube token
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "SONAR_TOKEN secret is required to run SonarQube Cloud analysis."
+            exit 1
+          fi
+
+      - name: Install SonarQube scanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Begin SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: >
+          dotnet sonarscanner begin
+          /k:"${{ env.SONAR_PROJECT_KEY }}"
+          /o:"${{ env.SONAR_ORGANIZATION }}"
+          /d:sonar.token="${SONAR_TOKEN}"
+          /d:sonar.qualitygate.wait=true
+          /d:sonar.cs.opencover.reportsPaths="TestResults/**/coverage.opencover.xml"
+
+      - name: Restore solution
+        run: dotnet restore Sashiko.slnx
+
+      - name: Build solution
+        run: >
+          dotnet build Sashiko.slnx
+          --configuration Release
+          --no-restore
+          --no-incremental
+          -p:ContinuousIntegrationBuild=true
+
+      - name: Test solution
+        run: >
+          dotnet test Sashiko.slnx
+          --configuration Release
+          --no-build
+          --logger "trx"
+          --collect:"XPlat Code Coverage"
+          --results-directory TestResults
+          --
+          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+
+      - name: End SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: dotnet sonarscanner end /d:sonar.token="${SONAR_TOKEN}"
+
+      - name: Pack public packages
+        run: |
+          dotnet pack Sashiko.Core/Sashiko.Core.csproj --configuration Release --no-build --output artifacts/packages
+          dotnet pack Sashiko.Validation/Sashiko.Validation.csproj --configuration Release --no-build --output artifacts/packages
+          dotnet pack Sashiko.Registries/Sashiko.Registries.csproj --configuration Release --no-build --output artifacts/packages
+          dotnet pack Sashiko.SystemMonitor/Sashiko.SystemMonitor.csproj --configuration Release --no-build --output artifacts/packages
+          dotnet pack Sashiko.Languages/Sashiko.Languages.csproj --configuration Release --no-build --output artifacts/packages
+          dotnet pack Sashiko.Names/Sashiko.Names.csproj --configuration Release --no-build --output artifacts/packages
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: artifacts/packages/*.nupkg
+          if-no-files-found: error
