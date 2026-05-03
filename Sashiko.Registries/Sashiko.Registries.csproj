@@ -7,7 +7,7 @@
 
 		<!-- NuGet package metadata -->
 		<PackageId>Sashiko.Registries</PackageId>
-		<Version>0.1.0</Version>
+		<Version>0.1.1</Version>
 		<Authors>Alexandru Luca (alex98luca)</Authors>
 		<Description>
 			JSON-based registry loading utilities for the Sashiko ecosystem.
@@ -15,7 +15,7 @@
 			schema validation integration, option-aware JSON parsing, and
 			domain-specific error semantics through RegistryLoadException.
 		</Description>
-		<PackageTags>registry; json; loader; sashiko; validation; configuration</PackageTags>
+		<PackageTags>registries; registry; json; loader; sashiko; validation; configuration</PackageTags>
 
 		<!-- Links -->
 		<PackageProjectUrl>https://github.com/alex98luca/Sashiko</PackageProjectUrl>
@@ -29,17 +29,23 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<IncludePackageReadmeFile>true</IncludePackageReadmeFile>
 
+		<!-- NuGet Icon -->
+		<PackageIcon>icon.png</PackageIcon>
+
 		<!-- Optional -->
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 
+	<!-- Dependencies -->
 	<ItemGroup>
-		<PackageReference Include="Sashiko.Core" Version="0.2.0" />
-		<PackageReference Include="Sashiko.Validation" Version="0.1.0" />
+		<PackageReference Include="Sashiko.Core" Version="0.3.1" />
+		<PackageReference Include="Sashiko.Validation" Version="0.1.1" />
 	</ItemGroup>
 
+	<!-- Include README + NuGet icon in the package -->
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="..\assets\branding\logo\nuget-256\icon.png" Pack="true" PackagePath="icon.png" />
 	</ItemGroup>
 
 </Project>
