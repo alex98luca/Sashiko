@@ -47,6 +47,8 @@ namespace Sashiko.Registries.Tests.Json
             { "Id": "not-a-number", "Name": "Test" }
             """;
 
+		private static string NullJson => "null";
+
 		// ------------------------------------------------------------
 		// Embedded loading
 		// ------------------------------------------------------------
@@ -106,6 +108,18 @@ namespace Sashiko.Registries.Tests.Json
 
 			Assert.Throws<RegistryLoadException>(() =>
 				loader.LoadExternal(WrongTypeJson, "external.json"));
+		}
+
+		[Fact]
+		public void LoadExternal_WhenDeserializationReturnsNull_ThrowsDeserializationError()
+		{
+			var validator = new FakeSchemaValidator();
+			var loader = new JsonRegistryObjectLoader<TestModel>(validator);
+
+			var exception = Assert.Throws<RegistryLoadException>(() =>
+				loader.LoadExternal(NullJson, "external.json"));
+
+			Assert.Contains("Deserialization returned null", exception.Message);
 		}
 
 		[Fact]
@@ -205,10 +219,13 @@ namespace Sashiko.Registries.Tests.Json
 
 			loader.LoadExternal(ValidJson, "file.json");
 
-			Assert.True(validator.LastContext?.IgnoreCase);
-			Assert.False((bool)validator.LastContext?.Metadata?["IsEmbedded"]);
-			Assert.Equal(typeof(TestModel).FullName, validator.LastContext?.Metadata?["RegistryType"]);
-			Assert.Same(options, validator.LastContext?.Metadata?["JsonOptions"]);
+			var context = validator.LastContext ?? throw new InvalidOperationException();
+			var metadata = context.Metadata ?? throw new InvalidOperationException();
+
+			Assert.True(context.IgnoreCase);
+			Assert.False(Assert.IsType<bool>(metadata["IsEmbedded"]));
+			Assert.Equal(typeof(TestModel).FullName, metadata["RegistryType"]);
+			Assert.Same(options, metadata["JsonOptions"]);
 		}
 	}
 }

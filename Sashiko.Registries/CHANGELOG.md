@@ -1,3 +1,10 @@
+# Changelog — Sashiko.Registries
+
+All notable changes to this project will be documented in this file.
+The format follows [Semantic Versioning](https://semver.org/).
+
+---
+
 ## [0.1.0] – 2026‑03‑18
 
 ### Added

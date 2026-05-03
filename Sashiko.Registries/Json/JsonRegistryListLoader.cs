@@ -10,7 +10,6 @@ namespace Sashiko.Registries.Json
 		private readonly JsonListLoader<T> _embeddedLoader;
 		private readonly JsonListLoader<T> _externalLoader;
 
-		private readonly JsonSerializerOptions _embeddedOptions;
 		private readonly JsonSerializerOptions _externalOptions;
 
 		public JsonRegistryListLoader(
@@ -21,10 +20,10 @@ namespace Sashiko.Registries.Json
 			_schemaValidator = schemaValidator;
 
 			// If only one is provided, reuse it
-			_embeddedOptions = embeddedOptions ?? externalOptions ?? new JsonSerializerOptions();
+			var resolvedEmbeddedOptions = embeddedOptions ?? externalOptions ?? new JsonSerializerOptions();
 			_externalOptions = externalOptions ?? embeddedOptions ?? new JsonSerializerOptions();
 
-			_embeddedLoader = new JsonListLoader<T>(_embeddedOptions);
+			_embeddedLoader = new JsonListLoader<T>(resolvedEmbeddedOptions);
 			_externalLoader = new JsonListLoader<T>(_externalOptions);
 		}
 
@@ -94,7 +93,7 @@ namespace Sashiko.Registries.Json
 			try
 			{
 				var result = JsonSerializer.Deserialize<TModel>(json, _externalOptions);
-				if (result == null)
+				if (EqualityComparer<TModel>.Default.Equals(result, default))
 					throw new RegistryLoadException(
 						$"Deserialization returned null for '{source}'.",
 						source,
