@@ -158,9 +158,14 @@ namespace Sashiko.Validation.Tests.Schema.Inspectors.Json
 			var schema = JsonSchemaInspector.GetSchema(element, "Root");
 
 			Assert.Equal(SchemaNodeKind.Object, schema.Kind);
-			Assert.Equal(SchemaNodeKind.Object, schema.Fields!["a"].Kind);
-			Assert.Equal(SchemaNodeKind.Object, schema.Fields["a"].Fields!["b"].Kind);
-			Assert.Equal(SchemaNodeKind.Leaf, schema.Fields["a"].Fields["b"].Fields!["c"].Kind);
+
+			var a = schema.Fields!["a"];
+			var b = a.Fields!["b"];
+			var c = b.Fields!["c"];
+
+			Assert.Equal(SchemaNodeKind.Object, a.Kind);
+			Assert.Equal(SchemaNodeKind.Object, b.Kind);
+			Assert.Equal(SchemaNodeKind.Leaf, c.Kind);
 		}
 	}
 }

@@ -7,7 +7,7 @@
 
 		<!-- NuGet package metadata -->
 		<PackageId>Sashiko.Validation</PackageId>
-		<Version>0.1.0</Version>
+		<Version>0.1.1</Version>
 		<Authors>Alexandru Luca (alex98luca)</Authors>
 		<Description>
 			Structural validation engine for the Sashiko ecosystem. Provides hierarchical schema extraction,
@@ -27,6 +27,9 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<IncludePackageReadmeFile>true</IncludePackageReadmeFile>
 
+		<!-- NuGet Icon -->
+		<PackageIcon>icon.png</PackageIcon>
+
 		<!-- Optional -->
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
@@ -34,6 +37,7 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="Sashiko.Validation.Tests" />
 		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="..\assets\branding\logo\nuget-256\icon.png" Pack="true" PackagePath="icon.png" />
 	</ItemGroup>
 
 </Project>

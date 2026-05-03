@@ -33,27 +33,62 @@ namespace Sashiko.Validation.Schema.Comparison
 
 			if (expected.Kind == SchemaNodeKind.Array)
 			{
-				if (actual.Element == null)
-				{
-					missing.Add(path);
-					return;
-				}
-
-				CompareNodes(expected.Element!, actual.Element!, path + "[]", missing, extra, ignoreCase);
+				CompareArrayNodes(expected, actual, path, missing, extra, ignoreCase);
 				return;
 			}
 
-			// Objects
+			CompareObjectNodes(expected, actual, path, missing, extra, ignoreCase);
+		}
+
+		private static void CompareArrayNodes(
+			SchemaNode expected,
+			SchemaNode actual,
+			string path,
+			List<string> missing,
+			List<string> extra,
+			bool ignoreCase)
+		{
+			if (actual.Element == null)
+			{
+				missing.Add(path);
+				return;
+			}
+
+			CompareNodes(expected.Element!, actual.Element, path + "[]", missing, extra, ignoreCase);
+		}
+
+		private static void CompareObjectNodes(
+			SchemaNode expected,
+			SchemaNode actual,
+			string path,
+			List<string> missing,
+			List<string> extra,
+			bool ignoreCase)
+		{
 			var expectedFields = expected.Fields ?? new Dictionary<string, SchemaNode>();
 			var actualFields = actual.Fields ?? new Dictionary<string, SchemaNode>();
-
-			// Build case-aware lookup for actual fields
 			var comparer = ignoreCase ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
-			var actualLookup = new Dictionary<string, SchemaNode>(comparer);
-			foreach (var kv in actualFields)
-				actualLookup[kv.Key] = kv.Value;
+			var actualLookup = new Dictionary<string, SchemaNode>(actualFields, comparer);
 
-			// Missing required fields
+			AddMissingRequiredFields(
+				expectedFields,
+				actualLookup,
+				path,
+				missing,
+				extra,
+				ignoreCase);
+
+			AddExtraFields(expectedFields, actualFields, path, extra, comparer);
+		}
+
+		private static void AddMissingRequiredFields(
+			IReadOnlyDictionary<string, SchemaNode> expectedFields,
+			Dictionary<string, SchemaNode> actualLookup,
+			string path,
+			List<string> missing,
+			List<string> extra,
+			bool ignoreCase)
+		{
 			foreach (var kv in expectedFields)
 			{
 				var name = kv.Key;
@@ -69,16 +104,21 @@ namespace Sashiko.Validation.Schema.Comparison
 
 				CompareNodes(expectedChild, actualChild, path + "." + name, missing, extra, ignoreCase);
 			}
+		}
 
-			// Extra fields
-			// We need to detect actual fields that don't match any expected (case-aware)
+		private static void AddExtraFields(
+			IReadOnlyDictionary<string, SchemaNode> expectedFields,
+			IReadOnlyDictionary<string, SchemaNode> actualFields,
+			string path,
+			List<string> extra,
+			StringComparer comparer)
+		{
 			var expectedNamesSet = new HashSet<string>(expectedFields.Keys, comparer);
 
-			foreach (var kv in actualFields)
-			{
-				if (!expectedNamesSet.Contains(kv.Key))
-					extra.Add(path + "." + kv.Key);
-			}
+			extra.AddRange(
+				actualFields
+					.Where(kv => !expectedNamesSet.Contains(kv.Key))
+					.Select(kv => path + "." + kv.Key));
 		}
 	}
 }

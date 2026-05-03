@@ -4,12 +4,15 @@ namespace Sashiko.Validation.Tests.Schema.Attributes
 {
 	public sealed class RequiredPropertiesAttributeTests
 	{
+		private static readonly string[] ExpectedProperties = ["A", "B", "C"];
+		private static readonly string[] DuplicateProperties = ["A", "A"];
+
 		[Fact]
 		public void Constructor_StoresProvidedPropertyNames()
 		{
 			var attr = new RequiredPropertiesAttribute("A", "B", "C");
 
-			Assert.Equal(new[] { "A", "B", "C" }, attr.Properties);
+			Assert.Equal(ExpectedProperties, attr.Properties);
 		}
 
 		[Fact]
@@ -17,7 +20,7 @@ namespace Sashiko.Validation.Tests.Schema.Attributes
 		{
 			var attr = new RequiredPropertiesAttribute("A");
 
-			Assert.IsAssignableFrom<IReadOnlyList<string>>(attr.Properties);
+			Assert.IsType<IReadOnlyList<string>>(attr.Properties, exactMatch: false);
 		}
 
 		[Fact]
@@ -43,7 +46,7 @@ namespace Sashiko.Validation.Tests.Schema.Attributes
 		{
 			var attr = new RequiredPropertiesAttribute("A", "A");
 
-			Assert.Equal(new[] { "A", "A" }, attr.Properties);
+			Assert.Equal(DuplicateProperties, attr.Properties);
 		}
 	}
 }

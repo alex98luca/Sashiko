@@ -28,7 +28,7 @@ namespace Sashiko.Validation.Validators.Json
 				ThrowSchemaError(context.Source, diff);
 		}
 
-		private void ValidateArray(SchemaNode expected, JsonElement root, ValidationContext context)
+		private static void ValidateArray(SchemaNode expected, JsonElement root, ValidationContext context)
 		{
 			if (root.ValueKind != JsonValueKind.Array)
 				throw new ValidationException("Expected JSON array.");
