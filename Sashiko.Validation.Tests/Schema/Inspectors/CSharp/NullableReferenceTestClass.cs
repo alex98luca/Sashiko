@@ -24,6 +24,14 @@ namespace Sashiko.Validation.Tests.Schema.Inspectors.CSharp
 			public int? NullableValue { get; set; }
 		}
 
+#nullable disable
+		private sealed class LegacyReferenceTestClass
+		{
+			public string Text { get; set; } = "";
+			public object Value { get; set; } = new();
+		}
+#nullable restore
+
 		// ------------------------------------------------------------
 		// Nullable reference types
 		// ------------------------------------------------------------
@@ -107,6 +115,22 @@ namespace Sashiko.Validation.Tests.Schema.Inspectors.CSharp
 		public void IsNullableReference_WhenStringIsNonNullable_ReturnsFalse()
 		{
 			var prop = typeof(StringSpecialCaseTestClass).GetProperty(nameof(StringSpecialCaseTestClass.NonNullableString))!;
+			Assert.False(NullableReferenceDetector.IsNullableReference(prop));
+		}
+
+		[Fact]
+		public void IsNullableReference_WhenStringHasNoNullableMetadata_ReturnsTrue()
+		{
+			var prop = typeof(LegacyReferenceTestClass).GetProperty(nameof(LegacyReferenceTestClass.Text))!;
+
+			Assert.True(NullableReferenceDetector.IsNullableReference(prop));
+		}
+
+		[Fact]
+		public void IsNullableReference_WhenObjectHasNoNullableMetadata_ReturnsFalse()
+		{
+			var prop = typeof(LegacyReferenceTestClass).GetProperty(nameof(LegacyReferenceTestClass.Value))!;
+
 			Assert.False(NullableReferenceDetector.IsNullableReference(prop));
 		}
 	}
