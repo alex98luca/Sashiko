@@ -1,3 +1,27 @@
+# Changelog — Sashiko.Validation
+
+All notable changes to this project will be documented in this file.  
+The format follows [Semantic Versioning](https://semver.org/).
+
+---
+
+## [0.1.1] - 2026-05-03
+
+### Improved
+- Refactored schema comparison internals to reduce cognitive complexity while preserving structural comparison behavior.
+- Simplified JSON array validation internals by marking stateless validation helpers as static.
+- Cleaned Validation test assertions reported by SonarQube/Roslyn analysis.
+
+### Testing
+- Added focused coverage for `ValidationContext` default and init-only property behavior.
+- Added focused coverage for `ValidationException` constructors.
+- Added nullable-reference detector regression coverage for legacy reference types without nullable metadata.
+
+### Notes
+This patch release does not change the public API or runtime contract of **Sashiko.Validation**. It keeps the package aligned with the repository quality gate and strengthens regression coverage around foundational validation components.
+
+---
+
 ## [0.1.0] - 2026-03-27
 
 ### Added
