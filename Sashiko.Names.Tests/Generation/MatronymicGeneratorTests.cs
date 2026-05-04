@@ -42,7 +42,7 @@ namespace Sashiko.Names.Tests.Generation
 					matronymicProbability: 1));
 			var generator = new MatronymicGenerator(
 				registry,
-				new DeterministicRandomPicker(chanceResults: new[] { false }));
+				new DeterministicRandomPicker(chanceResults: NameGeneratorTestSupport.FailedChance));
 
 			var matronymic = generator.Generate(LanguageId.Ita, Sex.Female, "Anna");
 

@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Sashiko.Names.Model.Enums;
+﻿using Sashiko.Names.Model.Enums;
 
 namespace Sashiko.Names.Model.Data
 {
@@ -8,96 +7,46 @@ namespace Sashiko.Names.Model.Data
 		// ------------------------------------------------------------
 		// Given Names
 		// ------------------------------------------------------------
-		public int GivenNameCountMin { get; }
-		public int GivenNameCountMax { get; }
-		public double UnisexFirstNameProbability { get; }
+		public required int GivenNameCountMin { get; init; }
+		public required int GivenNameCountMax { get; init; }
+		public required double UnisexFirstNameProbability { get; init; }
 
 		// ------------------------------------------------------------
 		// Patronymics
 		// ------------------------------------------------------------
-		public bool UsesPatronymic { get; }
-		public string? PatronymicPatternMale { get; }
-		public string? PatronymicPatternFemale { get; }
-		public double PatronymicProbability { get; }
+		public required bool UsesPatronymic { get; init; }
+		public required string? PatronymicPatternMale { get; init; }
+		public required string? PatronymicPatternFemale { get; init; }
+		public required double PatronymicProbability { get; init; }
 
 		// ------------------------------------------------------------
 		// Matronymics
 		// ------------------------------------------------------------
-		public bool UsesMatronymic { get; }
-		public string? MatronymicPatternMale { get; }
-		public string? MatronymicPatternFemale { get; }
-		public double MatronymicProbability { get; }
+		public required bool UsesMatronymic { get; init; }
+		public required string? MatronymicPatternMale { get; init; }
+		public required string? MatronymicPatternFemale { get; init; }
+		public required double MatronymicProbability { get; init; }
 
 		// ------------------------------------------------------------
 		// Surnames
 		// ------------------------------------------------------------
-		public bool UsesDoubleLastName { get; }
-		public double DoubleLastNameProbability { get; }
+		public required bool UsesDoubleLastName { get; init; }
+		public required double DoubleLastNameProbability { get; init; }
 
-		public bool UsesGenderedLastNames { get; }
+		public required bool UsesGenderedLastNames { get; init; }
 
 		// ------------------------------------------------------------
 		// Name Order
 		// ------------------------------------------------------------
-		public NameOrder Order { get; }
+		public required NameOrder Order { get; init; }
 
 		// ------------------------------------------------------------
 		// Prefixes / Suffixes
 		// ------------------------------------------------------------
-		public bool AllowPrefixes { get; }
-		public double PrefixProbability { get; }
+		public required bool AllowPrefixes { get; init; }
+		public required double PrefixProbability { get; init; }
 
-		public bool AllowSuffixes { get; }
-		public double SuffixProbability { get; }
-
-		[JsonConstructor]
-		internal NameRules(
-			int givenNameCountMin,
-			int givenNameCountMax,
-			double unisexFirstNameProbability,
-			bool usesPatronymic,
-			string? patronymicPatternMale,
-			string? patronymicPatternFemale,
-			double patronymicProbability,
-			bool usesMatronymic,
-			string? matronymicPatternMale,
-			string? matronymicPatternFemale,
-			double matronymicProbability,
-			bool usesDoubleLastName,
-			double doubleLastNameProbability,
-			bool usesGenderedLastNames,
-			NameOrder order,
-			bool allowPrefixes,
-			double prefixProbability,
-			bool allowSuffixes,
-			double suffixProbability)
-		{
-			GivenNameCountMin = givenNameCountMin;
-			GivenNameCountMax = givenNameCountMax;
-			UnisexFirstNameProbability = unisexFirstNameProbability;
-
-			UsesPatronymic = usesPatronymic;
-			PatronymicPatternMale = patronymicPatternMale;
-			PatronymicPatternFemale = patronymicPatternFemale;
-			PatronymicProbability = patronymicProbability;
-
-			UsesMatronymic = usesMatronymic;
-			MatronymicPatternMale = matronymicPatternMale;
-			MatronymicPatternFemale = matronymicPatternFemale;
-			MatronymicProbability = matronymicProbability;
-
-			UsesDoubleLastName = usesDoubleLastName;
-			DoubleLastNameProbability = doubleLastNameProbability;
-
-			UsesGenderedLastNames = usesGenderedLastNames;
-
-			Order = order;
-
-			AllowPrefixes = allowPrefixes;
-			PrefixProbability = prefixProbability;
-
-			AllowSuffixes = allowSuffixes;
-			SuffixProbability = suffixProbability;
-		}
+		public required bool AllowSuffixes { get; init; }
+		public required double SuffixProbability { get; init; }
 	}
 }

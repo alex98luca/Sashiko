@@ -18,15 +18,17 @@ namespace Sashiko.Names.Tests.Generation
 		public static NamePool CreatePool(
 			IReadOnlyList<string>? prefixes = null,
 			IReadOnlyList<string>? suffixes = null)
-			=> new(
-				maleFirstNames: new[] { "Marco", "Luca" },
-				femaleFirstNames: new[] { "Anna", "Maria" },
-				unisexFirstNames: new[] { "Alex" },
-				maleLastNames: new[] { "Ivanov" },
-				femaleLastNames: new[] { "Ivanova" },
-				lastNames: new[] { "Rossi", "Bianchi" },
-				prefixes: prefixes ?? new[] { "Dr." },
-				suffixes: suffixes ?? new[] { "Jr." });
+			=> new()
+			{
+				MaleFirstNames = MaleFirstNames,
+				FemaleFirstNames = FemaleFirstNames,
+				UnisexFirstNames = UnisexFirstNames,
+				MaleLastNames = MaleLastNames,
+				FemaleLastNames = FemaleLastNames,
+				LastNames = LastNames,
+				Prefixes = prefixes ?? Prefixes,
+				Suffixes = suffixes ?? Suffixes
+			};
 
 		public static NameRules CreateRules(
 			int givenNameCountMin = 1,
@@ -48,26 +50,46 @@ namespace Sashiko.Names.Tests.Generation
 			double prefixProbability = 0,
 			bool allowSuffixes = false,
 			double suffixProbability = 0)
-			=> new(
-				givenNameCountMin,
-				givenNameCountMax,
-				unisexFirstNameProbability,
-				usesPatronymic,
-				patronymicPatternMale,
-				patronymicPatternFemale,
-				patronymicProbability,
-				usesMatronymic,
-				matronymicPatternMale,
-				matronymicPatternFemale,
-				matronymicProbability,
-				usesDoubleLastName,
-				doubleLastNameProbability,
-				usesGenderedLastNames,
-				order,
-				allowPrefixes,
-				prefixProbability,
-				allowSuffixes,
-				suffixProbability);
+			=> new()
+			{
+				GivenNameCountMin = givenNameCountMin,
+				GivenNameCountMax = givenNameCountMax,
+				UnisexFirstNameProbability = unisexFirstNameProbability,
+				UsesPatronymic = usesPatronymic,
+				PatronymicPatternMale = patronymicPatternMale,
+				PatronymicPatternFemale = patronymicPatternFemale,
+				PatronymicProbability = patronymicProbability,
+				UsesMatronymic = usesMatronymic,
+				MatronymicPatternMale = matronymicPatternMale,
+				MatronymicPatternFemale = matronymicPatternFemale,
+				MatronymicProbability = matronymicProbability,
+				UsesDoubleLastName = usesDoubleLastName,
+				DoubleLastNameProbability = doubleLastNameProbability,
+				UsesGenderedLastNames = usesGenderedLastNames,
+				Order = order,
+				AllowPrefixes = allowPrefixes,
+				PrefixProbability = prefixProbability,
+				AllowSuffixes = allowSuffixes,
+				SuffixProbability = suffixProbability
+			};
+
+		public static readonly string[] MaleFirstNames = ["Marco", "Luca"];
+		public static readonly string[] FemaleFirstNames = ["Anna", "Maria"];
+		public static readonly string[] UnisexFirstNames = ["Alex"];
+		public static readonly string[] MaleLastNames = ["Ivanov"];
+		public static readonly string[] FemaleLastNames = ["Ivanova"];
+		public static readonly string[] LastNames = ["Rossi", "Bianchi"];
+		public static readonly string[] Prefixes = ["Dr."];
+		public static readonly string[] Suffixes = ["Jr."];
+		public static readonly string[] DoubleMaleFirstNames = ["Marco", "Marco"];
+		public static readonly string[] SingleMaleFirstName = ["Marco"];
+		public static readonly string[] SingleFemaleFirstName = ["Anna"];
+		public static readonly string[] SingleUnisexFirstName = ["Alex"];
+		public static readonly string[] SingleMaleLastName = ["Ivanov"];
+		public static readonly string[] SingleFemaleLastName = ["Ivanova"];
+		public static readonly string[] SingleLastName = ["Rossi"];
+		public static readonly string[] DoubleLastNames = ["Rossi", "Bianchi"];
+		public static readonly bool[] FailedChance = [false];
 	}
 
 	internal sealed class TestNameRegistry : INameRegistry

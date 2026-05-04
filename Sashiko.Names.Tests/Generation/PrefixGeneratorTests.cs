@@ -53,7 +53,7 @@ namespace Sashiko.Names.Tests.Generation
 					prefixProbability: 1));
 			var generator = new PrefixGenerator(
 				registry,
-				new DeterministicRandomPicker(chanceResults: new[] { false }));
+				new DeterministicRandomPicker(chanceResults: NameGeneratorTestSupport.FailedChance));
 
 			var prefix = generator.Generate(LanguageId.Ita, Sex.Male);
 

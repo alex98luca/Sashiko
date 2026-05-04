@@ -22,7 +22,7 @@ namespace Sashiko.Names.Registry
 		// EMBEDDED LOADING
 		// ------------------------------------------------------------
 
-		private static IReadOnlyDictionary<LanguageId, NameEntry> LoadEmbeddedNames()
+		private static Dictionary<LanguageId, NameEntry> LoadEmbeddedNames()
 		{
 			var asm = Assembly.GetExecutingAssembly();
 			var resources = asm.GetManifestResourceNames();

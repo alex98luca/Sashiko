@@ -18,27 +18,18 @@ namespace Sashiko.Names.Generation.Implementation
 		private readonly ISuffixGenerator _suffix;
 		private readonly INameAssembler _assembler;
 
-		public NameGenerator(
-			INameRegistry registry,
-			IRandomPicker picker,
-			IGivenNameGenerator given,
-			IPatronymicGenerator patronymic,
-			IMatronymicGenerator matronymic,
-			ILastNameGenerator last,
-			IPrefixGenerator prefix,
-			ISuffixGenerator suffix,
-			INameAssembler assembler)
+		public NameGenerator(NameGeneratorDependencies dependencies)
 		{
-			_registry = registry;
-			_picker = picker;
+			_registry = dependencies.Registry;
+			_picker = dependencies.Picker;
 
-			_given = given;
-			_patronymic = patronymic;
-			_matronymic = matronymic;
-			_last = last;
-			_prefix = prefix;
-			_suffix = suffix;
-			_assembler = assembler;
+			_given = dependencies.Given;
+			_patronymic = dependencies.Patronymic;
+			_matronymic = dependencies.Matronymic;
+			_last = dependencies.Last;
+			_prefix = dependencies.Prefix;
+			_suffix = dependencies.Suffix;
+			_assembler = dependencies.Assembler;
 		}
 
 		public PersonName Generate(
@@ -75,16 +66,16 @@ namespace Sashiko.Names.Generation.Implementation
 			// ------------------------------------------------------------
 			// Assemble final name
 			// ------------------------------------------------------------
-			return _assembler.Assemble(
-				language,
-				sex,
-				given,
-				patronymic,
-				matronymic,
-				last,
-				prefix,
-				suffix
-			);
+			return _assembler.Assemble(new NameAssemblyRequest
+			{
+				Language = language,
+				GivenNames = given,
+				Patronymic = patronymic,
+				Matronymic = matronymic,
+				LastNames = last,
+				Prefix = prefix,
+				Suffix = suffix
+			});
 		}
 
 		// ------------------------------------------------------------

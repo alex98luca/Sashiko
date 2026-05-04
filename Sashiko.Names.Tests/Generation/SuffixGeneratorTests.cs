@@ -53,7 +53,7 @@ namespace Sashiko.Names.Tests.Generation
 					suffixProbability: 1));
 			var generator = new SuffixGenerator(
 				registry,
-				new DeterministicRandomPicker(chanceResults: new[] { false }));
+				new DeterministicRandomPicker(chanceResults: NameGeneratorTestSupport.FailedChance));
 
 			var suffix = generator.Generate(LanguageId.Ita, Sex.Male);
 

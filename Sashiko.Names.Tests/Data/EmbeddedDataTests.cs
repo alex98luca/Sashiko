@@ -217,7 +217,7 @@ namespace Sashiko.Names.Tests.Data
 				AssertProbability(rules.DoubleLastNameProbability);
 				AssertProbability(rules.PrefixProbability);
 				AssertProbability(rules.SuffixProbability);
-				Assert.True(Enum.IsDefined(typeof(NameOrder), rules.Order));
+				Assert.True(Enum.IsDefined(rules.Order));
 
 				if (rules.UsesPatronymic)
 				{
@@ -233,16 +233,38 @@ namespace Sashiko.Names.Tests.Data
 			}
 		}
 
-		public static IEnumerable<object[]> EmbeddedResourceNames()
-			=> NamePoolResourceNames().Concat(NameRulesResourceNames());
+		public static TheoryData<string> EmbeddedResourceNames()
+		{
+			var data = new TheoryData<string>();
 
-		public static IEnumerable<object[]> NamePoolResourceNames()
-			=> SupportedLanguages.Select(language =>
-				new object[] { GetResourceName(language, "names") });
+			foreach (var language in SupportedLanguages)
+			{
+				data.Add(GetResourceName(language, "names"));
+				data.Add(GetResourceName(language, "rules"));
+			}
 
-		public static IEnumerable<object[]> NameRulesResourceNames()
-			=> SupportedLanguages.Select(language =>
-				new object[] { GetResourceName(language, "rules") });
+			return data;
+		}
+
+		public static TheoryData<string> NamePoolResourceNames()
+		{
+			var data = new TheoryData<string>();
+
+			foreach (var language in SupportedLanguages)
+				data.Add(GetResourceName(language, "names"));
+
+			return data;
+		}
+
+		public static TheoryData<string> NameRulesResourceNames()
+		{
+			var data = new TheoryData<string>();
+
+			foreach (var language in SupportedLanguages)
+				data.Add(GetResourceName(language, "rules"));
+
+			return data;
+		}
 
 		private static readonly LanguageId[] SupportedLanguages =
 			Enum.GetValues<LanguageId>()

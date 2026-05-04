@@ -138,11 +138,25 @@ namespace Sashiko.Names.Tests.Registry
 			Assert.DoesNotContain(registry.All, entry => entry.Language == LanguageId.Random);
 		}
 
-		public static IEnumerable<object[]> SupportedLanguageCodes()
-			=> SupportedLanguages.Select(language => new object[] { language.ToString().ToLowerInvariant() });
+		public static TheoryData<string> SupportedLanguageCodes()
+		{
+			var data = new TheoryData<string>();
 
-		public static IEnumerable<object[]> SupportedLanguagesData()
-			=> SupportedLanguages.Select(language => new object[] { language });
+			foreach (var language in SupportedLanguages)
+				data.Add(language.ToString().ToLowerInvariant());
+
+			return data;
+		}
+
+		public static TheoryData<LanguageId> SupportedLanguagesData()
+		{
+			var data = new TheoryData<LanguageId>();
+
+			foreach (var language in SupportedLanguages)
+				data.Add(language);
+
+			return data;
+		}
 
 		private static string ReadResource(string languageCode, string resourceKind)
 		{

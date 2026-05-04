@@ -33,7 +33,7 @@ namespace Sashiko.Names.Api
 			string? motherName = null)
 			=> _generator.Generate(language, sex, fatherName, motherName);
 
-		private static INameGenerator CreateGenerator(
+		private static NameGenerator CreateGenerator(
 			INameRegistry registry,
 			IRandomPicker picker)
 		{
@@ -45,16 +45,18 @@ namespace Sashiko.Names.Api
 			var suffix = new SuffixGenerator(registry, picker);
 			var assembler = new NameAssembler(registry);
 
-			return new NameGenerator(
-				registry,
-				picker,
-				given,
-				patronymic,
-				matronymic,
-				last,
-				prefix,
-				suffix,
-				assembler);
+			return new NameGenerator(new NameGeneratorDependencies
+			{
+				Registry = registry,
+				Picker = picker,
+				Given = given,
+				Patronymic = patronymic,
+				Matronymic = matronymic,
+				Last = last,
+				Prefix = prefix,
+				Suffix = suffix,
+				Assembler = assembler
+			});
 		}
 	}
 }
