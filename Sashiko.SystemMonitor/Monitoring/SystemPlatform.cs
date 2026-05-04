@@ -46,16 +46,30 @@ namespace Sashiko.SystemMonitor.Monitoring
 
 		private static SystemPlatform Detect()
 		{
-			var version = RuntimeInformation.OSDescription.Trim();
-			var architecture = RuntimeInformation.OSArchitecture;
+			return Detect(
+				RuntimeInformation.OSDescription.Trim(),
+				RuntimeInformation.OSArchitecture,
+				RuntimeInformation.IsOSPlatform(OSPlatform.Windows),
+				RuntimeInformation.IsOSPlatform(OSPlatform.Linux),
+				RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+			);
+		}
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+		internal static SystemPlatform Detect(
+			string version,
+			Architecture architecture,
+			bool isWindows,
+			bool isLinux,
+			bool isMacOS
+		)
+		{
+			if (isWindows)
 				return new SystemPlatform(SystemPlatformKind.Windows, version, architecture);
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			if (isLinux)
 				return new SystemPlatform(DetectLinuxKind(version), version, architecture);
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (isMacOS)
 				return new SystemPlatform(SystemPlatformKind.MacOS, version, architecture);
 
 			var description = version.ToLowerInvariant();
@@ -69,7 +83,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return new SystemPlatform(SystemPlatformKind.Unknown, version, architecture);
 		}
 
-		private static SystemPlatformKind DetectLinuxKind(string version)
+		internal static SystemPlatformKind DetectLinuxKind(string version)
 		{
 			var description = version.ToLowerInvariant();
 
