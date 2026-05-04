@@ -22,16 +22,30 @@ namespace Sashiko.Core.Environment
 
 		private static RuntimeContext Detect()
 		{
-			var version = RuntimeInformation.OSDescription.Trim();
-			var architecture = RuntimeInformation.OSArchitecture;
+			return Detect(
+				RuntimeInformation.OSDescription.Trim(),
+				RuntimeInformation.OSArchitecture,
+				RuntimeInformation.IsOSPlatform(OSPlatform.Windows),
+				RuntimeInformation.IsOSPlatform(OSPlatform.Linux),
+				RuntimeInformation.IsOSPlatform(OSPlatform.OSX)
+			);
+		}
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+		internal static RuntimeContext Detect(
+			string version,
+			Architecture architecture,
+			bool isWindows,
+			bool isLinux,
+			bool isMacOS
+		)
+		{
+			if (isWindows)
 				return new RuntimeContext(OperatingSystemFamily.Windows, version, architecture);
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			if (isLinux)
 				return new RuntimeContext(DetectLinuxFamily(version), version, architecture);
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (isMacOS)
 				return new RuntimeContext(OperatingSystemFamily.MacOS, version, architecture);
 
 			var description = version.ToLowerInvariant();
@@ -45,7 +59,7 @@ namespace Sashiko.Core.Environment
 			return new RuntimeContext(OperatingSystemFamily.Unknown, version, architecture);
 		}
 
-		private static OperatingSystemFamily DetectLinuxFamily(string version)
+		internal static OperatingSystemFamily DetectLinuxFamily(string version)
 		{
 			return version.Contains("android", StringComparison.OrdinalIgnoreCase)
 				? OperatingSystemFamily.Android
