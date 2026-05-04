@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
@@ -30,6 +31,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// WINDOWS (DXGI via dxdiag)
 		// ------------------------------------------------------------
 
+		[ExcludeFromCodeCoverage(Justification = "Requires Windows dxdiag.")]
 		private static GpuInfo GetWindowsGpu()
 		{
 			var outputPath = Path.Combine(Path.GetTempPath(), $"sashiko-dxdiag-{Guid.NewGuid():N}.txt");
@@ -84,6 +86,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// LINUX (lspci + sysfs)
 		// ------------------------------------------------------------
 
+		[ExcludeFromCodeCoverage(Justification = "Requires host GPU tooling and sysfs driver support.")]
 		private static GpuInfo GetLinuxGpu()
 		{
 			try
@@ -124,6 +127,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return UnknownGpuValue;
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires host GPU sysfs driver support.")]
 		private static double DetectLinuxVram()
 		{
 			try
@@ -156,6 +160,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// MACOS (system_profiler)
 		// ------------------------------------------------------------
 
+		[ExcludeFromCodeCoverage(Justification = "Requires macOS system_profiler.")]
 		private static GpuInfo GetMacGpu()
 		{
 			try

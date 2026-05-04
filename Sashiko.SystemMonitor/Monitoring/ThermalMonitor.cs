@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
@@ -39,6 +40,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// LINUX (/sys/class/thermal + hwmon)
 		// ------------------------------------------------------------
 
+		[ExcludeFromCodeCoverage(Justification = "Requires host thermal sensor files.")]
 		private static ThermalInfo GetLinuxThermals()
 		{
 			double cpuTemp = ReadLinuxCpuTemp();
@@ -50,6 +52,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return new ThermalInfo(cpuTemp, gpuTemp, systemTemp, throttling);
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires host thermal sensor files.")]
 		private static double ReadLinuxCpuTemp()
 		{
 			try
@@ -90,6 +93,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return 0;
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires host GPU thermal tooling.")]
 		private static double ReadLinuxGpuTemp()
 		{
 			var nvidiaTemp = ReadNvidiaGpuTemp();
@@ -99,6 +103,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return ReadAmdGpuTemp();
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires nvidia-smi.")]
 		private static double ReadNvidiaGpuTemp()
 		{
 			try
@@ -125,6 +130,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return 0;
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires AMD hwmon sensor files.")]
 		private static double ReadAmdGpuTemp()
 		{
 			try
@@ -170,6 +176,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return double.TryParse(content, out var milli) ? milli / 1000.0 : 0;
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires host thermal sensor files.")]
 		private static double ReadLinuxSystemTemp()
 		{
 			try

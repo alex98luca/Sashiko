@@ -57,6 +57,22 @@ namespace Sashiko.SystemMonitor.Tests.Monitoring
 			Assert.False(thermal.IsThrottling);
 		}
 
+		[Theory]
+		[InlineData((int)SystemPlatformKind.Windows)]
+		[InlineData((int)SystemPlatformKind.MacOS)]
+		public void ThermalMonitor_ShouldReturnNeutralInfoForPlatformsWithoutNativeThermals(
+			int kindValue
+		)
+		{
+			var kind = (SystemPlatformKind)kindValue;
+			var thermal = ThermalMonitor.GetInfo(new SystemPlatform(kind, "test", Architecture.X64));
+
+			Assert.Equal(0, thermal.CpuTempCelsius);
+			Assert.Equal(0, thermal.GpuTempCelsius);
+			Assert.Equal(0, thermal.SystemTempCelsius);
+			Assert.False(thermal.IsThrottling);
+		}
+
 		[Fact]
 		public void PowerMonitor_ShouldReturnNeutralInfoForUnknownPlatform()
 		{

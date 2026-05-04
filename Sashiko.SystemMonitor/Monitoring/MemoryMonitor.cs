@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Sashiko.Core.Conversions;
 using Sashiko.Core.Models.Enums;
@@ -31,6 +32,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// WINDOWS (GlobalMemoryStatusEx)
 		// ------------------------------------------------------------
 
+		[ExcludeFromCodeCoverage(Justification = "Requires Windows native memory APIs.")]
 		private static MemoryInfo GetWindowsMemory()
 		{
 			var mem = new MemoryStatusEx();
@@ -75,12 +77,14 @@ namespace Sashiko.SystemMonitor.Monitoring
 
 		[LibraryImport("kernel32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
+		[ExcludeFromCodeCoverage(Justification = "Source-generated Windows native interop.")]
 		private static partial bool GlobalMemoryStatusEx(ref MemoryStatusEx buffer);
 
 		// ------------------------------------------------------------
 		// LINUX (/proc/meminfo)
 		// ------------------------------------------------------------
 
+		[ExcludeFromCodeCoverage(Justification = "Requires Linux /proc/meminfo.")]
 		private static MemoryInfo GetLinuxMemory()
 		{
 			try
@@ -129,6 +133,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// MACOS (sysctl + vm_stat)
 		// ------------------------------------------------------------
 
+		[ExcludeFromCodeCoverage(Justification = "Requires macOS memory tooling.")]
 		private static MemoryInfo GetMacMemory()
 		{
 			try
@@ -151,6 +156,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			}
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires macOS sysctl.")]
 		private static double GetMacTotalMemory()
 		{
 			var process = Process.Start(new ProcessStartInfo
@@ -171,6 +177,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return 0;
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires macOS vm_stat.")]
 		private static double GetMacFreeMemory()
 		{
 			var process = Process.Start(new ProcessStartInfo
