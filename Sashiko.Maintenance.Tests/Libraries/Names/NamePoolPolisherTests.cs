@@ -5,6 +5,10 @@ namespace Sashiko.Maintenance.Tests.Libraries.Names
 {
 	public sealed class NamePoolPolisherTests
 	{
+		private static readonly string[] PolishedMaleFirstNames = ["Adam", "Anna", "Zoey"];
+		private static readonly string[] PolishedFemaleFirstNames = ["Clara", "Mia"];
+		private static readonly string[] PolishedLastNames = ["Ivanov", "Petrov"];
+
 		[Fact]
 		public async Task PolishAsync_ShouldSortTrimAndRemoveDuplicatesFromEachNamesFile()
 		{
@@ -60,15 +64,15 @@ namespace Sashiko.Maintenance.Tests.Libraries.Names
 				Assert.Equal(new NamePolishResult(2, 3), result);
 
 				Assert.Equal(
-					new[] { "Adam", "Anna", "Zoey" },
+					PolishedMaleFirstNames,
 					ReadArray(itaPath, "MaleFirstNames")
 				);
 				Assert.Equal(
-					new[] { "Clara", "Mia" },
+					PolishedFemaleFirstNames,
 					ReadArray(itaPath, "FemaleFirstNames")
 				);
 				Assert.Equal(
-					new[] { "Ivanov", "Petrov" },
+					PolishedLastNames,
 					ReadArray(rusPath, "LastNames")
 				);
 				Assert.Equal("{ \"Untouched\": true }", await File.ReadAllTextAsync(ignoredPath));
@@ -96,7 +100,7 @@ namespace Sashiko.Maintenance.Tests.Libraries.Names
 			return path;
 		}
 
-		private static IReadOnlyList<string> ReadArray(string path, string propertyName)
+		private static string[] ReadArray(string path, string propertyName)
 		{
 			using var document = JsonDocument.Parse(File.ReadAllText(path));
 

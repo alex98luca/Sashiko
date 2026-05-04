@@ -5,8 +5,12 @@ namespace Sashiko.Maintenance.Libraries.Languages.Updating
 {
 	internal sealed class LanguageRegistryUpdater : ILanguageRegistryUpdater
 	{
-		private const string Iso6393Url =
-			"https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab";
+		private static readonly Uri Iso6393Uri = new UriBuilder
+		{
+			Scheme = Uri.UriSchemeHttps,
+			Host = "iso639-3.sil.org",
+			Path = "sites/iso639-3/files/downloads/iso-639-3.tab"
+		}.Uri;
 
 		private readonly HttpClient _http;
 
@@ -18,7 +22,7 @@ namespace Sashiko.Maintenance.Libraries.Languages.Updating
 		public async Task UpdateAsync(string outputPath)
 		{
 			// 1. Download TSV
-			var tsv = await _http.GetStringAsync(Iso6393Url);
+			var tsv = await _http.GetStringAsync(Iso6393Uri);
 
 			// 2. Parse TSV → IsoSilLanguage[]
 			var external = IsoSilParser.Parse(tsv);

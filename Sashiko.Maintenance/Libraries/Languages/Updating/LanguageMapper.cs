@@ -10,7 +10,7 @@ namespace Sashiko.Maintenance.Libraries.Languages.Updating
 				name: x.Name,
 				iso639_1: IsoCodeNormalizer.Normalize(x.Iso639_1),
 				iso639_2: IsoCodeNormalizer.Normalize(x.Iso639_2),
-				iso639_3: IsoCodeNormalizer.Normalize(x.Iso639_3),
+				iso639_3: NormalizeRequiredCode(x.Iso639_3),
 				scope: MapScope(x.Scope),
 				type: MapType(x.Type)
 			)).ToList();
@@ -34,5 +34,9 @@ namespace Sashiko.Maintenance.Libraries.Languages.Updating
 			"S" => LanguageType.Special,
 			_ => throw new InvalidOperationException($"Unknown type code: {code}")
 		};
+
+		private static string NormalizeRequiredCode(string value)
+			=> IsoCodeNormalizer.Normalize(value)
+				?? throw new InvalidOperationException("Required ISO 639-3 code is missing.");
 	}
 }

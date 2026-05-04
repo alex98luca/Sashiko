@@ -58,7 +58,7 @@ namespace Sashiko.Maintenance.Libraries.Names
 			return removed;
 		}
 
-		private static IReadOnlyList<string> PolishValues(IReadOnlyList<string> values)
+		private static string[] PolishValues(IReadOnlyList<string> values)
 			=> values
 				.Select(value => value.Trim())
 				.Where(value => value.Length > 0)

@@ -6,6 +6,10 @@ namespace Sashiko.Maintenance.Tests
 	[Collection("NonParallel")]
 	public sealed class CommandDispatcherTests
 	{
+		private static readonly string[] InvalidCategoryArguments = ["invalid"];
+		private static readonly string[] TestRunArguments = ["test", "run"];
+		private static readonly string[] TestCategoryArguments = ["test"];
+
 		private sealed class FakeHandler : ICommandHandler
 		{
 			public bool Called { get; private set; }
@@ -51,7 +55,7 @@ namespace Sashiko.Maintenance.Tests
 
 			try
 			{
-				await CommandDispatcher.DispatchAsync(new[] { "invalid" });
+				await CommandDispatcher.DispatchAsync(InvalidCategoryArguments);
 
 				var output = sw.ToString();
 				Assert.Contains("Unknown category", output);
@@ -77,7 +81,7 @@ namespace Sashiko.Maintenance.Tests
 
 			try
 			{
-				await CommandDispatcher.DispatchAsync(new[] { "test", "run" });
+				await CommandDispatcher.DispatchAsync(TestRunArguments);
 
 				Assert.True(fake.Called);
 				Assert.Equal("run", fake.ReceivedCommand);
@@ -103,7 +107,7 @@ namespace Sashiko.Maintenance.Tests
 
 			try
 			{
-				await CommandDispatcher.DispatchAsync(new[] { "test" });
+				await CommandDispatcher.DispatchAsync(TestCategoryArguments);
 
 				Assert.True(fake.Called);
 				Assert.Null(fake.ReceivedCommand);
