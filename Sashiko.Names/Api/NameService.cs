@@ -10,7 +10,7 @@ namespace Sashiko.Names.Api
 {
 	public sealed class NameService
 	{
-		private readonly INameGenerator _generator;
+		private readonly NameGenerator _generator;
 
 		public NameService()
 		{
