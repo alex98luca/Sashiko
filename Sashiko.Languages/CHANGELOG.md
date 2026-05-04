@@ -5,6 +5,18 @@ The format follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.1.1] - 2026-05-04
+
+### Improved
+- Refined registry loading internals to satisfy SonarQube/Roslyn performance guidance while preserving the public read-only contract.
+- Cleaned test helpers and enum assertions reported by SonarQube/Roslyn analysis.
+- Updated the package to depend on **Sashiko.Registries** `0.1.1`, bringing in the latest stable Sashiko registry, validation, and core improvements.
+
+### Notes
+This patch release does not change the public API or language dataset of **Sashiko.Languages**. It keeps the package aligned with the repository quality gate and the latest stable Sashiko building blocks.
+
+---
+
 ## [0.1.0] - 2026-04-09
 
 ### Added
