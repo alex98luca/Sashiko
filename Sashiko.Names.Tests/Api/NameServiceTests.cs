@@ -73,16 +73,22 @@ namespace Sashiko.Names.Tests.Api
 				.Select(m => m.Name)
 				.ToArray();
 
-			Assert.Equal(new[] { "Generate" }, publicMethods);
+			Assert.Equal(PublicApiMethods, publicMethods);
 		}
 
-		public static IEnumerable<object[]> SupportedLanguageSexCombinations()
-			=> Enum.GetValues<LanguageId>()
-				.Where(language => language != LanguageId.Random)
-				.SelectMany(language => new[]
-				{
-					new object[] { language, Sex.Male },
-					new object[] { language, Sex.Female }
-				});
+		public static TheoryData<LanguageId, Sex> SupportedLanguageSexCombinations()
+		{
+			var data = new TheoryData<LanguageId, Sex>();
+
+			foreach (var language in Enum.GetValues<LanguageId>().Where(language => language != LanguageId.Random))
+			{
+				data.Add(language, Sex.Male);
+				data.Add(language, Sex.Female);
+			}
+
+			return data;
+		}
+
+		private static readonly string[] PublicApiMethods = ["Generate"];
 	}
 }

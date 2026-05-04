@@ -13,64 +13,57 @@ namespace Sashiko.Names.Generation.Implementation
 			_registry = registry;
 		}
 
-		public PersonName Assemble(
-			LanguageId language,
-			Sex sex,
-			IReadOnlyList<string> givenNames,
-			string? patronymic,
-			string? matronymic,
-			IReadOnlyList<string> lastNames,
-			string? prefix,
-			string? suffix)
+		public PersonName Assemble(NameAssemblyRequest request)
 		{
-			var entry = _registry.Get(language);
+			var entry = _registry.Get(request.Language);
 			var rules = entry.Rules;
 
 			// Build the ordered list of parts (for FullName)
 			var parts = new List<string>();
 
-			if (prefix is not null)
-				parts.Add(prefix);
+			if (request.Prefix is not null)
+				parts.Add(request.Prefix);
 
 			if (rules.Order == NameOrder.FirstLast)
 			{
-				parts.AddRange(givenNames);
+				parts.AddRange(request.GivenNames);
 
-				if (patronymic is not null)
-					parts.Add(patronymic);
+				if (request.Patronymic is not null)
+					parts.Add(request.Patronymic);
 
-				if (matronymic is not null)
-					parts.Add(matronymic);
+				if (request.Matronymic is not null)
+					parts.Add(request.Matronymic);
 
-				parts.AddRange(lastNames);
+				parts.AddRange(request.LastNames);
 			}
 			else // NameOrder.LastFirst
 			{
-				parts.AddRange(lastNames);
+				parts.AddRange(request.LastNames);
 
-				parts.AddRange(givenNames);
+				parts.AddRange(request.GivenNames);
 
-				if (patronymic is not null)
-					parts.Add(patronymic);
+				if (request.Patronymic is not null)
+					parts.Add(request.Patronymic);
 
-				if (matronymic is not null)
-					parts.Add(matronymic);
+				if (request.Matronymic is not null)
+					parts.Add(request.Matronymic);
 			}
 
-			if (suffix is not null)
-				parts.Add(suffix);
+			if (request.Suffix is not null)
+				parts.Add(request.Suffix);
 
 			// Construct the structured PersonName
-			return new PersonName(
-				givenNames: givenNames,
-				lastNames: lastNames,
-				patronymic: patronymic,
-				matronymic: matronymic,
-				prefix: prefix,
-				suffix: suffix,
-				nickname: null, // nickname not handled here
-				order: rules.Order
-			);
+			return new PersonName(new PersonNameParts
+			{
+				GivenNames = request.GivenNames,
+				LastNames = request.LastNames,
+				Patronymic = request.Patronymic,
+				Matronymic = request.Matronymic,
+				Prefix = request.Prefix,
+				Suffix = request.Suffix,
+				Nickname = null, // nickname not handled here
+				Order = rules.Order
+			});
 		}
 	}
 }

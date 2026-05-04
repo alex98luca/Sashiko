@@ -15,26 +15,18 @@ namespace Sashiko.Names.Model
 
 		internal NameOrder Order { get; }
 
-		internal PersonName(
-			IEnumerable<string> givenNames,
-			IEnumerable<string> lastNames,
-			string? patronymic = null,
-			string? matronymic = null,
-			string? prefix = null,
-			string? suffix = null,
-			string? nickname = null,
-			NameOrder order = NameOrder.FirstLast)
+		internal PersonName(PersonNameParts parts)
 		{
-			GivenNames = StringNormalizer.NormalizeCollection(givenNames);
-			LastNames = StringNormalizer.NormalizeCollection(lastNames);
+			GivenNames = StringNormalizer.NormalizeCollection(parts.GivenNames);
+			LastNames = StringNormalizer.NormalizeCollection(parts.LastNames);
 
-			Patronymic = StringNormalizer.NormalizeOptional(patronymic);
-			Matronymic = StringNormalizer.NormalizeOptional(matronymic);
-			Prefix = StringNormalizer.NormalizeOptional(prefix);
-			Suffix = StringNormalizer.NormalizeOptional(suffix);
-			Nickname = StringNormalizer.NormalizeOptional(nickname);
+			Patronymic = StringNormalizer.NormalizeOptional(parts.Patronymic);
+			Matronymic = StringNormalizer.NormalizeOptional(parts.Matronymic);
+			Prefix = StringNormalizer.NormalizeOptional(parts.Prefix);
+			Suffix = StringNormalizer.NormalizeOptional(parts.Suffix);
+			Nickname = StringNormalizer.NormalizeOptional(parts.Nickname);
 
-			Order = order;
+			Order = parts.Order;
 		}
 
 		// ------------------------------------------------------------

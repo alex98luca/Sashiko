@@ -14,7 +14,7 @@ namespace Sashiko.Names.Tests.Generation
 
 			var names = generator.Generate(LanguageId.Ita, Sex.Male);
 
-			Assert.Equal(new[] { "Rossi" }, names);
+			Assert.Equal(NameGeneratorTestSupport.SingleLastName, names);
 		}
 
 		[Fact]
@@ -27,8 +27,8 @@ namespace Sashiko.Names.Tests.Generation
 			var male = generator.Generate(LanguageId.Ita, Sex.Male);
 			var female = generator.Generate(LanguageId.Ita, Sex.Female);
 
-			Assert.Equal(new[] { "Ivanov" }, male);
-			Assert.Equal(new[] { "Ivanova" }, female);
+			Assert.Equal(NameGeneratorTestSupport.SingleMaleLastName, male);
+			Assert.Equal(NameGeneratorTestSupport.SingleFemaleLastName, female);
 		}
 
 		[Fact]
@@ -43,7 +43,7 @@ namespace Sashiko.Names.Tests.Generation
 
 			var names = generator.Generate(LanguageId.Ita, Sex.Male);
 
-			Assert.Equal(new[] { "Rossi", "Bianchi" }, names);
+			Assert.Equal(NameGeneratorTestSupport.DoubleLastNames, names);
 		}
 
 		[Fact]
@@ -55,11 +55,11 @@ namespace Sashiko.Names.Tests.Generation
 					doubleLastNameProbability: 1));
 			var generator = new LastNameGenerator(
 				registry,
-				new DeterministicRandomPicker(chanceResults: new[] { false }));
+				new DeterministicRandomPicker(chanceResults: NameGeneratorTestSupport.FailedChance));
 
 			var names = generator.Generate(LanguageId.Ita, Sex.Male);
 
-			Assert.Equal(new[] { "Rossi" }, names);
+			Assert.Equal(NameGeneratorTestSupport.SingleLastName, names);
 		}
 
 		[Fact]
@@ -74,7 +74,7 @@ namespace Sashiko.Names.Tests.Generation
 
 			var names = generator.Generate(LanguageId.Ita, Sex.Male);
 
-			Assert.Equal(new[] { "Rossi", "Bianchi" }, names);
+			Assert.Equal(NameGeneratorTestSupport.DoubleLastNames, names);
 		}
 	}
 }

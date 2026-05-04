@@ -39,16 +39,17 @@ namespace Sashiko.Maintenance.Libraries.Names
 				JsonWriteOptions.Indented
 			);
 
-			var polishedPool = new NamePool(
-				PolishValues(pool.MaleFirstNames),
-				PolishValues(pool.FemaleFirstNames),
-				PolishValues(pool.UnisexFirstNames),
-				PolishValues(pool.MaleLastNames),
-				PolishValues(pool.FemaleLastNames),
-				PolishValues(pool.LastNames),
-				PolishValues(pool.Prefixes),
-				PolishValues(pool.Suffixes)
-			);
+			var polishedPool = new NamePool
+			{
+				MaleFirstNames = PolishValues(pool.MaleFirstNames),
+				FemaleFirstNames = PolishValues(pool.FemaleFirstNames),
+				UnisexFirstNames = PolishValues(pool.UnisexFirstNames),
+				MaleLastNames = PolishValues(pool.MaleLastNames),
+				FemaleLastNames = PolishValues(pool.FemaleLastNames),
+				LastNames = PolishValues(pool.LastNames),
+				Prefixes = PolishValues(pool.Prefixes),
+				Suffixes = PolishValues(pool.Suffixes)
+			};
 
 			var removed = CountRemovedValues(pool, polishedPool);
 

@@ -1,3 +1,4 @@
+using Sashiko.Names.Generation;
 using Sashiko.Names.Generation.Implementation;
 using Sashiko.Names.Model.Enums;
 
@@ -12,15 +13,15 @@ namespace Sashiko.Names.Tests.Generation
 				rules: NameGeneratorTestSupport.CreateRules(order: NameOrder.LastFirst));
 			var assembler = new NameAssembler(registry);
 
-			var name = assembler.Assemble(
-				LanguageId.Ita,
-				Sex.Male,
-				new[] { "Marco" },
-				patronymic: "Ivanovich",
-				matronymic: null,
-				new[] { "Rossi" },
-				prefix: "Dr.",
-				suffix: "Jr.");
+			var name = assembler.Assemble(new NameAssemblyRequest
+			{
+				Language = LanguageId.Ita,
+				GivenNames = NameGeneratorTestSupport.SingleMaleFirstName,
+				Patronymic = "Ivanovich",
+				LastNames = NameGeneratorTestSupport.SingleLastName,
+				Prefix = "Dr.",
+				Suffix = "Jr."
+			});
 
 			Assert.Equal("Dr. Rossi Marco Ivanovich Jr.", name.FullName);
 		}

@@ -14,7 +14,7 @@ namespace Sashiko.Names.Tests.Generation
 
 			var names = generator.Generate(LanguageId.Ita, Sex.Male);
 
-			Assert.Equal(new[] { "Marco", "Marco" }, names);
+			Assert.Equal(NameGeneratorTestSupport.DoubleMaleFirstNames, names);
 		}
 
 		[Fact]
@@ -26,7 +26,7 @@ namespace Sashiko.Names.Tests.Generation
 
 			var names = generator.Generate(LanguageId.Ita, Sex.Female);
 
-			Assert.Equal(new[] { "Alex" }, names);
+			Assert.Equal(NameGeneratorTestSupport.SingleUnisexFirstName, names);
 		}
 
 		[Fact]
@@ -36,11 +36,11 @@ namespace Sashiko.Names.Tests.Generation
 				rules: NameGeneratorTestSupport.CreateRules(unisexFirstNameProbability: 1));
 			var generator = new GivenNameGenerator(
 				registry,
-				new DeterministicRandomPicker(chanceResults: new[] { false }));
+				new DeterministicRandomPicker(chanceResults: NameGeneratorTestSupport.FailedChance));
 
 			var names = generator.Generate(LanguageId.Ita, Sex.Female);
 
-			Assert.Equal(new[] { "Anna" }, names);
+			Assert.Equal(NameGeneratorTestSupport.SingleFemaleFirstName, names);
 		}
 
 		[Fact]

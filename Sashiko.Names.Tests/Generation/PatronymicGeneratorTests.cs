@@ -42,7 +42,7 @@ namespace Sashiko.Names.Tests.Generation
 					patronymicProbability: 1));
 			var generator = new PatronymicGenerator(
 				registry,
-				new DeterministicRandomPicker(chanceResults: new[] { false }));
+				new DeterministicRandomPicker(chanceResults: NameGeneratorTestSupport.FailedChance));
 
 			var patronymic = generator.Generate(LanguageId.Ita, Sex.Male, "Ivan");
 
