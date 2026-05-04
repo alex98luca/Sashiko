@@ -5,6 +5,21 @@ The format follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.4.0] - 2026-05-04
+
+### Added
+- Added `OperatingSystemFamily` for shared runtime OS classification.
+- Added `RuntimeContext` for cached OS family, OS description, architecture, friendly architecture name, and mobile runtime metadata.
+- Extended `RuntimeInfo` with cached `Current` environment data and an `IsMobile` convenience flag.
+
+### Testing
+- Added coverage for runtime environment caching, legacy OS flag compatibility, family names, and architecture names.
+
+### Notes
+This release promotes reusable runtime detection into **Sashiko.Core**, allowing higher-level packages such as **Sashiko.SystemMonitor** to avoid duplicating operating system checks.
+
+---
+
 ## [0.3.1] - 2026-05-03
 
 ### Testing

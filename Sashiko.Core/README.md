@@ -13,7 +13,7 @@ It provides small, reusable building blocks used by higher-level Sashiko package
 - JSON file read/write helpers
 - Text normalization helpers
 - Probability utilities and random selection helpers
-- Lightweight environment/runtime information
+- Cached environment/runtime information
 - Zero external dependencies
 
 ---
@@ -56,6 +56,18 @@ var megabits = BandwidthConverter.Convert(
 Console.WriteLine(megabits); // 1
 ```
 
+### Runtime environment
+
+```csharp
+using Sashiko.Core.Environment;
+
+var runtime = RuntimeInfo.Current;
+
+Console.WriteLine(runtime.FamilyName);       // Windows, Linux, macOS, ...
+Console.WriteLine(runtime.ArchitectureName); // x64, ARM64, ...
+Console.WriteLine(RuntimeInfo.IsDebug);
+```
+
 ---
 
 ## 🧪 Testing
@@ -69,6 +81,7 @@ The test suite covers:
 - registry snapshot helpers
 - probability helpers
 - text normalization
+- runtime environment metadata
 
 ---
 
