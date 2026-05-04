@@ -7,6 +7,35 @@ The maintenance tool is not versioned or published as a NuGet package.
 
 ---
 
+## 2026-05-04
+### Improved
+- Resolved SonarQube/Roslyn findings in the maintenance entry point, language updater, name pool polisher, and command tests.
+- Made required ISO 639-3 normalization explicit when mapping SIL language rows.
+- Reworked the ISO 639-3 download endpoint construction to avoid hardcoded absolute URI literals.
+- Tightened name pool polishing helpers and test fixtures for clearer analyzer behavior.
+
+### Testing
+- Added assertions to no-hook command handler tests.
+- Replaced repeated inline test arrays with shared fixtures.
+- Kept command-dispatch and name-polishing tests deterministic and isolated.
+
+### Documentation
+- Documented the names maintenance workflow that was introduced after the original maintenance tool changelog entry.
+
+---
+
+## 2026-05-02
+### Added
+- `names polish` command for maintaining embedded `Sashiko.Names` data.
+- `NamePoolPolisher` for trimming, sorting, and deduplicating every embedded `names.json` file.
+- `NamePoolMaintenance` entry point for locating and polishing the `Sashiko.Names/Data` folder.
+- Tests covering names command dispatch and name pool polishing behavior.
+
+### Notes
+- Names maintenance keeps embedded data contributor-friendly without adding runtime dependencies to `Sashiko.Names`.
+
+---
+
 ## 2026-04-08
 ### Added
 - Initial implementation of the handler-based command architecture

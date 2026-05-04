@@ -99,10 +99,11 @@ public interface ICommandHandler
 Handlers are instance‑based and support test hooks for full isolation.
 
 ### 3. Library‑Specific Maintenance Logic
-Each library (e.g., `Sashiko.Languages`) exposes a maintenance entry point:
+Each library exposes a focused maintenance entry point:
 
 ```csharp
 LanguageRegistryMaintenance.UpdateEmbeddedLanguagesAsync();
+NamePoolMaintenance.PolishEmbeddedNamesAsync();
 ```
 
 This keeps the dispatcher clean and the responsibilities well‑separated.
@@ -117,6 +118,7 @@ The maintenance tool is fully covered by a lightweight but meaningful test suite
 - Help and error output
 - Deterministic update behavior
 - File generation logic
+- Name pool polishing behavior
 - Project root discovery
 
 Console output is captured safely using `Console.SetOut` with proper restoration
