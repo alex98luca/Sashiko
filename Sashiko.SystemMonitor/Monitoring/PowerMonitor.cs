@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Sashiko.SystemMonitor.Models;
 
@@ -29,6 +30,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// WINDOWS (GetSystemPowerStatus)
 		// ------------------------------------------------------------
 
+		[ExcludeFromCodeCoverage(Justification = "Requires Windows native power APIs.")]
 		private static PowerInfo GetWindowsPower()
 		{
 			try
@@ -61,12 +63,14 @@ namespace Sashiko.SystemMonitor.Monitoring
 
 		[LibraryImport("kernel32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
+		[ExcludeFromCodeCoverage(Justification = "Source-generated Windows native interop.")]
 		private static partial bool GetSystemPowerStatus(out SystemPowerStatus status);
 
 		// ------------------------------------------------------------
 		// LINUX (/sys/class/power_supply)
 		// ------------------------------------------------------------
 
+		[ExcludeFromCodeCoverage(Justification = "Requires Linux /sys/class/power_supply.")]
 		private static PowerInfo GetLinuxPower()
 		{
 			try
@@ -115,6 +119,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// MACOS (pmset -g batt)
 		// ------------------------------------------------------------
 
+		[ExcludeFromCodeCoverage(Justification = "Requires macOS pmset.")]
 		private static PowerInfo GetMacPower()
 		{
 			try

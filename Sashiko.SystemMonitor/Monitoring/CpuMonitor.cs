@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Sashiko.SystemMonitor.Models;
@@ -54,6 +55,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return UnknownCpuModel;
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires Windows registry access.")]
 		private static string WindowsCpuModel()
 		{
 			try
@@ -73,6 +75,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			}
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires Linux /proc/cpuinfo.")]
 		private static string LinuxCpuModel()
 		{
 			try
@@ -88,6 +91,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			}
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires macOS sysctl.")]
 		private static string MacCpuModel()
 		{
 			try
@@ -127,6 +131,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return Environment.ProcessorCount;
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires Linux /proc/cpuinfo.")]
 		private static int LinuxPhysicalCores()
 		{
 			try
@@ -140,6 +145,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			}
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires macOS sysctl.")]
 		private static int MacPhysicalCores()
 		{
 			try
@@ -182,11 +188,13 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// WINDOWS: Use GetSystemTimes (fast, no sleep)
 		[LibraryImport("kernel32.dll", SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.Bool)]
+		[ExcludeFromCodeCoverage(Justification = "Source-generated Windows native interop.")]
 		private static partial bool GetSystemTimes(
 			out FileTime idleTime,
 			out FileTime kernelTime,
 			out FileTime userTime);
 
+		[ExcludeFromCodeCoverage(Justification = "Requires Windows native system timing APIs.")]
 		private static double WindowsCpuLoad()
 		{
 			if (!GetSystemTimes(out var idle, out var kernel, out var user))
@@ -208,6 +216,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			return Math.Round(usage, 1);
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires Linux /proc/stat.")]
 		private static double LinuxCpuLoad()
 		{
 			try
@@ -240,6 +249,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			}
 		}
 
+		[ExcludeFromCodeCoverage(Justification = "Requires macOS process sampling.")]
 		private static double MacCpuLoad()
 		{
 			try
