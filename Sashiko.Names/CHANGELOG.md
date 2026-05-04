@@ -5,6 +5,23 @@ The format follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.1.1] - 2026-05-04
+
+### Improved
+- Refactored internal name generation wiring to reduce constructor and method arity reported by SonarQube while preserving the public `NameService` API.
+- Simplified embedded name and rules data models with initializer-based JSON deserialization.
+- Updated internal Sashiko dependencies to the latest stable Core and Registries packages.
+
+### Testing
+- Converted untyped xUnit member data to strongly typed `TheoryData`.
+- Replaced repeated inline expected arrays with shared test fixtures.
+- Cleaned enum assertions and analyzer-reported test helpers.
+
+### Notes
+This patch release does not change the public API or embedded name dataset of **Sashiko.Names**. It keeps the package aligned with the repository quality gate and the latest stable Sashiko building blocks.
+
+---
+
 ## [0.1.0] - 2026-05-02
 
 ### Added
