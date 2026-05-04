@@ -19,7 +19,9 @@ namespace Sashiko.Maintenance.Tests.Commands
 				}
 			};
 
-			await handler.DispatchAsync("polish");
+			var exception = await Record.ExceptionAsync(() => handler.DispatchAsync("polish"));
+
+			Assert.Null(exception);
 
 			Assert.True(called);
 		}
@@ -32,7 +34,9 @@ namespace Sashiko.Maintenance.Tests.Commands
 				PolishHook = null
 			};
 
-			await handler.DispatchAsync("polish");
+			var exception = await Record.ExceptionAsync(() => handler.DispatchAsync("polish"));
+
+			Assert.Null(exception);
 		}
 
 		[Fact]

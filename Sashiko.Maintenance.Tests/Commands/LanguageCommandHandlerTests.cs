@@ -37,8 +37,11 @@ namespace Sashiko.Maintenance.Tests.Commands
 				UpdateHook = null
 			};
 
-			// Act & Assert
-			await handler.DispatchAsync("update");
+			// Act
+			var exception = await Record.ExceptionAsync(() => handler.DispatchAsync("update"));
+
+			// Assert
+			Assert.Null(exception);
 		}
 
 		[Fact]
