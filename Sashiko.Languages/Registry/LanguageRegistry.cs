@@ -17,7 +17,7 @@ namespace Sashiko.Languages.Registry
 			_languages = LoadEmbeddedLanguages();
 		}
 
-		private static IReadOnlyDictionary<string, Language> LoadEmbeddedLanguages()
+		private static Dictionary<string, Language> LoadEmbeddedLanguages()
 		{
 			var asm = Assembly.GetExecutingAssembly();
 			var resourceName = "Sashiko.Languages.Data.Languages.languages.json";

@@ -129,8 +129,8 @@ namespace Sashiko.Languages.Tests.Registry
 
 			foreach (var lang in registry.Languages.Values)
 			{
-				Assert.True(Enum.IsDefined(typeof(LanguageScope), lang.Scope));
-				Assert.True(Enum.IsDefined(typeof(LanguageType), lang.Type));
+				Assert.True(Enum.IsDefined(lang.Scope));
+				Assert.True(Enum.IsDefined(lang.Type));
 			}
 		}
 
