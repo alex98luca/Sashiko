@@ -12,7 +12,7 @@ namespace Sashiko.Languages.Tests.Data
 
 		private readonly JsonSchemaValidator _validator = new();
 
-		private string LoadEmbeddedJson()
+		private static string LoadEmbeddedJson()
 		{
 			var asm = typeof(LanguageRegistry).Assembly;
 
