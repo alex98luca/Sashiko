@@ -4,6 +4,8 @@
 
 It is useful for diagnostics, local dashboards, development tooling, and applications that need a simple view of the current machine.
 
+This package is still in alpha because hardware monitoring depends heavily on operating system permissions, drivers, and vendor-specific APIs. The public API is intentionally small while the collectors become more mature.
+
 ---
 
 ## ✨ Features
@@ -16,6 +18,7 @@ It is useful for diagnostics, local dashboards, development tooling, and applica
 - Thermal information when available
 - Power and battery information when available
 - Snapshot-based API
+- Cached platform detection for cheaper repeated snapshots
 - Zero external dependencies
 
 ---
@@ -43,6 +46,18 @@ Console.WriteLine($"Disk Free: {snapshot.Disk.FreeGB} GB");
 ```
 
 Snapshots are designed for simple polling when you need periodic system state.
+
+---
+
+## 🖥️ Platform Notes
+
+SystemMonitor uses built-in operating system APIs and command-line probes only. When a metric is unavailable, blocked by permissions, or unsupported by the current machine, the snapshot returns a neutral value instead of throwing.
+
+- Windows support currently focuses on CPU, memory, disk, and power data available through native APIs.
+- Linux support can read richer `/proc` and `/sys` data when those virtual files are exposed by the host.
+- macOS support uses native command-line tools where available, with thermal data planned for a future collector.
+
+The operating system is detected once per process and reused by the snapshot pipeline, keeping repeated captures lighter and more predictable.
 
 ---
 
@@ -80,6 +95,7 @@ Future versions may include:
 
 - richer network metrics
 - improved platform-specific collectors
+- configurable fallbacks for unavailable sensors
 - historical sampling helpers
 - configurable polling utilities
 

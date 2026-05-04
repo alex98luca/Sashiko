@@ -7,14 +7,16 @@ namespace Sashiko.SystemMonitor.Snapshot
 	{
 		public static SystemSnapshot Capture()
 		{
+			var platform = SystemPlatform.Current;
+
 			return new SystemSnapshot(
-				OsMonitor.GetInfo(),
-				CpuMonitor.GetInfo(),
-				GpuMonitor.GetInfo(),
-				MemoryMonitor.GetInfo(),
+				OsMonitor.GetInfo(platform),
+				CpuMonitor.GetInfo(platform),
+				GpuMonitor.GetInfo(platform),
+				MemoryMonitor.GetInfo(platform),
 				DiskMonitor.GetInfo(),
-				ThermalMonitor.GetInfo(),
-				PowerMonitor.GetInfo()
+				ThermalMonitor.GetInfo(platform),
+				PowerMonitor.GetInfo(platform)
 			);
 		}
 	}

@@ -4,17 +4,22 @@ using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
 {
-	public static class PowerMonitor
+	public static partial class PowerMonitor
 	{
 		public static PowerInfo GetInfo()
 		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			return GetInfo(SystemPlatform.Current);
+		}
+
+		internal static PowerInfo GetInfo(SystemPlatform platform)
+		{
+			if (platform.IsWindows)
 				return GetWindowsPower();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			if (platform.IsLinux)
 				return GetLinuxPower();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (platform.IsMacOS)
 				return GetMacPower();
 
 			return new PowerInfo(true, 100, false);
@@ -28,8 +33,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		{
 			try
 			{
-				SYSTEM_POWER_STATUS status;
-				if (!GetSystemPowerStatus(out status))
+				if (!GetSystemPowerStatus(out var status))
 					return new PowerInfo(true, 100, false);
 
 				bool plugged = status.ACLineStatus == 1;
@@ -45,7 +49,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		private struct SYSTEM_POWER_STATUS
+		private struct SystemPowerStatus
 		{
 			public byte ACLineStatus;
 			public byte BatteryFlag;
@@ -55,8 +59,9 @@ namespace Sashiko.SystemMonitor.Monitoring
 			public uint BatteryFullLifeTime;
 		}
 
-		[DllImport("kernel32.dll")]
-		private static extern bool GetSystemPowerStatus(out SYSTEM_POWER_STATUS sps);
+		[LibraryImport("kernel32.dll")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static partial bool GetSystemPowerStatus(out SystemPowerStatus status);
 
 		// ------------------------------------------------------------
 		// LINUX (/sys/class/power_supply)
@@ -91,7 +96,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 
 					if (File.Exists(statusFile))
 					{
-						var status = File.ReadAllText(statusFile).Trim().ToLower();
+						var status = File.ReadAllText(statusFile).Trim().ToLowerInvariant();
 						plugged = status.Contains("charging") || status.Contains("full");
 					}
 				}
@@ -141,15 +146,13 @@ namespace Sashiko.SystemMonitor.Monitoring
 		private static int ExtractMacBatteryPercent(string output)
 		{
 			var line = output.Split('\n')
-				.FirstOrDefault(l => l.Contains("%"));
+				.FirstOrDefault(l => l.Contains('%'));
 
 			if (line == null)
 				return 100;
 
-			var percentStr = line.Split('%')[0]
-				.Split(' ')
-				.Last()
-				.Trim();
+			var percentParts = line.Split('%')[0].Split(' ');
+			var percentStr = percentParts[^1].Trim();
 
 			return int.TryParse(percentStr, out var p) ? p : 100;
 		}

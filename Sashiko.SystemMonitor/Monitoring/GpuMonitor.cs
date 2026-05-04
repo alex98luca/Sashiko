@@ -1,23 +1,29 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
 {
 	public static class GpuMonitor
 	{
+		private const string UnknownGpuValue = "Unknown";
+
 		public static GpuInfo GetInfo()
 		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			return GetInfo(SystemPlatform.Current);
+		}
+
+		internal static GpuInfo GetInfo(SystemPlatform platform)
+		{
+			if (platform.IsWindows)
 				return GetWindowsGpu();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			if (platform.IsLinux)
 				return GetLinuxGpu();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (platform.IsMacOS)
 				return GetMacGpu();
 
-			return new GpuInfo("Unknown", "Unknown", 0, 0);
+			return UnknownGpu();
 		}
 
 		// ------------------------------------------------------------
@@ -26,30 +32,32 @@ namespace Sashiko.SystemMonitor.Monitoring
 
 		private static GpuInfo GetWindowsGpu()
 		{
+			var outputPath = Path.Combine(Path.GetTempPath(), $"sashiko-dxdiag-{Guid.NewGuid():N}.txt");
+
 			try
 			{
 				var process = Process.Start(new ProcessStartInfo
 				{
 					FileName = "dxdiag",
-					Arguments = "/t dxdiag_output.txt",
+					Arguments = $"/t \"{outputPath}\"",
 					UseShellExecute = false,
 					CreateNoWindow = true
 				});
 
 				process?.WaitForExit(2000);
 
-				if (!File.Exists("dxdiag_output.txt"))
-					return new GpuInfo("Unknown", "Unknown", 0, 0);
+				if (!File.Exists(outputPath))
+					return UnknownGpu();
 
-				var lines = File.ReadAllLines("dxdiag_output.txt");
+				var lines = File.ReadAllLines(outputPath);
 
 				string model = lines.FirstOrDefault(l => l.Contains("Card name"))?
-					.Split(':')[1].Trim() ?? "Unknown";
+					.Split(':')[1].Trim() ?? UnknownGpuValue;
 
 				string vendor = lines.FirstOrDefault(l => l.Contains("Manufacturer"))?
-					.Split(':')[1].Trim() ?? "Unknown";
+					.Split(':')[1].Trim() ?? UnknownGpuValue;
 
-				string vramLine = lines.FirstOrDefault(l => l.Contains("Display Memory"));
+				string? vramLine = lines.FirstOrDefault(l => l.Contains("Display Memory"));
 				double vram = 0;
 
 				if (vramLine != null)
@@ -59,13 +67,16 @@ namespace Sashiko.SystemMonitor.Monitoring
 						vram = mb / 1024.0;
 				}
 
-				File.Delete("dxdiag_output.txt");
-
 				return new GpuInfo(vendor, model, vram, 0);
 			}
 			catch
 			{
-				return new GpuInfo("Unknown", "Unknown", 0, 0);
+				return UnknownGpu();
+			}
+			finally
+			{
+				if (File.Exists(outputPath))
+					File.Delete(outputPath);
 			}
 		}
 
@@ -88,7 +99,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 				var output = process?.StandardOutput.ReadToEnd()?.Trim();
 
 				if (string.IsNullOrWhiteSpace(output))
-					return new GpuInfo("Unknown", "Unknown", 0, 0);
+					return UnknownGpu();
 
 				// Example: "VGA compatible controller: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti]"
 				string model = output;
@@ -100,7 +111,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			}
 			catch
 			{
-				return new GpuInfo("Unknown", "Unknown", 0, 0);
+				return UnknownGpu();
 			}
 		}
 
@@ -110,7 +121,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			if (line.Contains("AMD", StringComparison.OrdinalIgnoreCase) ||
 				line.Contains("ATI", StringComparison.OrdinalIgnoreCase)) return "AMD";
 			if (line.Contains("Intel", StringComparison.OrdinalIgnoreCase)) return "Intel";
-			return "Unknown";
+			return UnknownGpuValue;
 		}
 
 		private static double DetectLinuxVram()
@@ -132,7 +143,11 @@ namespace Sashiko.SystemMonitor.Monitoring
 						return b / 1024.0 / 1024.0 / 1024.0;
 				}
 			}
-			catch { }
+			catch
+			{
+				// VRAM sysfs probes are optional and often unavailable without driver support.
+				return 0;
+			}
 
 			return 0;
 		}
@@ -156,7 +171,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 				var output = process?.StandardOutput.ReadToEnd();
 
 				if (string.IsNullOrWhiteSpace(output))
-					return new GpuInfo("Unknown", "Unknown", 0, 0);
+					return UnknownGpu();
 
 				string model = ExtractMacField(output, "Chipset Model");
 				string vendor = ExtractMacField(output, "Vendor");
@@ -166,7 +181,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			}
 			catch
 			{
-				return new GpuInfo("Unknown", "Unknown", 0, 0);
+				return UnknownGpu();
 			}
 		}
 
@@ -175,7 +190,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			var line = text.Split('\n')
 				.FirstOrDefault(l => l.Trim().StartsWith(field));
 
-			return line?.Split(':')[1].Trim() ?? "Unknown";
+			return line?.Split(':')[1].Trim() ?? UnknownGpuValue;
 		}
 
 		private static double ParseMacVram(string vram)
@@ -191,5 +206,8 @@ namespace Sashiko.SystemMonitor.Monitoring
 
 			return 0;
 		}
+
+		private static GpuInfo UnknownGpu()
+			=> new GpuInfo(UnknownGpuValue, UnknownGpuValue, 0, 0);
 	}
 }

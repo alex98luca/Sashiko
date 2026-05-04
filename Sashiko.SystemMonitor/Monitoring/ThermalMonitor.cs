@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
@@ -8,13 +7,18 @@ namespace Sashiko.SystemMonitor.Monitoring
 	{
 		public static ThermalInfo GetInfo()
 		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			return GetInfo(SystemPlatform.Current);
+		}
+
+		internal static ThermalInfo GetInfo(SystemPlatform platform)
+		{
+			if (platform.IsLinux)
 				return GetLinuxThermals();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			if (platform.IsWindows)
 				return GetWindowsThermals();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (platform.IsMacOS)
 				return GetMacThermals();
 
 			return new ThermalInfo(0, 0, 0, false);
@@ -77,14 +81,26 @@ namespace Sashiko.SystemMonitor.Monitoring
 					}
 				}
 			}
-			catch { }
+			catch
+			{
+				// Thermal probes may be missing or permission-restricted on many Linux systems.
+				return 0;
+			}
 
 			return 0;
 		}
 
 		private static double ReadLinuxGpuTemp()
 		{
-			// NVIDIA GPUs (nvidia-smi)
+			var nvidiaTemp = ReadNvidiaGpuTemp();
+			if (nvidiaTemp > 0)
+				return nvidiaTemp;
+
+			return ReadAmdGpuTemp();
+		}
+
+		private static double ReadNvidiaGpuTemp()
+		{
 			try
 			{
 				var process = Process.Start(new ProcessStartInfo
@@ -100,35 +116,58 @@ namespace Sashiko.SystemMonitor.Monitoring
 				if (double.TryParse(output, out var temp))
 					return temp;
 			}
-			catch { }
+			catch
+			{
+				// nvidia-smi is optional and may not be installed even on systems with a GPU.
+				return 0;
+			}
 
-			// AMD GPUs (hwmon)
+			return 0;
+		}
+
+		private static double ReadAmdGpuTemp()
+		{
 			try
 			{
 				var hwmonDirs = Directory.GetDirectories("/sys/class/hwmon");
 
 				foreach (var dir in hwmonDirs)
 				{
-					var nameFile = Path.Combine(dir, "name");
-					if (File.Exists(nameFile))
-					{
-						var name = File.ReadAllText(nameFile).Trim().ToLower();
-						if (name.Contains("amdgpu"))
-						{
-							var tempFile = Directory.GetFiles(dir, "temp*_input").FirstOrDefault();
-							if (tempFile != null)
-							{
-								var content = File.ReadAllText(tempFile).Trim();
-								if (double.TryParse(content, out var milli))
-									return milli / 1000.0;
-							}
-						}
-					}
+					if (!IsAmdGpuHwmon(dir))
+						continue;
+
+					var temp = ReadFirstHwmonTemperature(dir);
+					if (temp > 0)
+						return temp;
 				}
 			}
-			catch { }
+			catch
+			{
+				// AMD hwmon probes are optional and may be hidden by the active driver.
+				return 0;
+			}
 
 			return 0;
+		}
+
+		private static bool IsAmdGpuHwmon(string directory)
+		{
+			var nameFile = Path.Combine(directory, "name");
+			if (!File.Exists(nameFile))
+				return false;
+
+			var name = File.ReadAllText(nameFile).Trim();
+			return name.Contains("amdgpu", StringComparison.OrdinalIgnoreCase);
+		}
+
+		private static double ReadFirstHwmonTemperature(string directory)
+		{
+			var tempFile = Directory.GetFiles(directory, "temp*_input").FirstOrDefault();
+			if (tempFile == null)
+				return 0;
+
+			var content = File.ReadAllText(tempFile).Trim();
+			return double.TryParse(content, out var milli) ? milli / 1000.0 : 0;
 		}
 
 		private static double ReadLinuxSystemTemp()
@@ -145,13 +184,10 @@ namespace Sashiko.SystemMonitor.Monitoring
 					if (!File.Exists(typeFile) || !File.Exists(tempFile))
 						continue;
 
-					var type = File.ReadAllText(typeFile).Trim().ToLower();
+					var type = File.ReadAllText(typeFile).Trim();
 
 					// Look for general system sensors
-					if (type.Contains("x86_pkg_temp") ||
-						type.Contains("acpitz") ||
-						type.Contains("pch") ||
-						type.Contains("soc"))
+					if (IsSystemThermalZone(type))
 					{
 						var content = File.ReadAllText(tempFile).Trim();
 						if (double.TryParse(content, out var milli))
@@ -159,9 +195,21 @@ namespace Sashiko.SystemMonitor.Monitoring
 					}
 				}
 			}
-			catch { }
+			catch
+			{
+				// System thermal zones are not guaranteed to exist on all Linux machines.
+				return 0;
+			}
 
 			return 0;
+		}
+
+		private static bool IsSystemThermalZone(string type)
+		{
+			return type.Contains("x86_pkg_temp", StringComparison.OrdinalIgnoreCase) ||
+				type.Contains("acpitz", StringComparison.OrdinalIgnoreCase) ||
+				type.Contains("pch", StringComparison.OrdinalIgnoreCase) ||
+				type.Contains("soc", StringComparison.OrdinalIgnoreCase);
 		}
 
 		// ------------------------------------------------------------
