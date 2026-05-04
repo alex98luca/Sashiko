@@ -6,17 +6,22 @@ using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
 {
-	public static class MemoryMonitor
+	public static partial class MemoryMonitor
 	{
 		public static MemoryInfo GetInfo()
 		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			return GetInfo(SystemPlatform.Current);
+		}
+
+		internal static MemoryInfo GetInfo(SystemPlatform platform)
+		{
+			if (platform.IsWindows)
 				return GetWindowsMemory();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			if (platform.IsLinux)
 				return GetLinuxMemory();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (platform.IsMacOS)
 				return GetMacMemory();
 
 			return new MemoryInfo(0, 0, 0, 0);
@@ -28,12 +33,12 @@ namespace Sashiko.SystemMonitor.Monitoring
 
 		private static MemoryInfo GetWindowsMemory()
 		{
-			MEMORYSTATUSEX mem = new MEMORYSTATUSEX();
+			var mem = new MemoryStatusEx();
 			if (!GlobalMemoryStatusEx(ref mem))
 				return new MemoryInfo(0, 0, 0, 0);
 
-			double total = MemoryConverter.Convert(mem.ullTotalPhys, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
-			double available = MemoryConverter.Convert(mem.ullAvailPhys, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
+			double total = MemoryConverter.Convert(mem.TotalPhysicalMemory, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
+			double available = MemoryConverter.Convert(mem.AvailablePhysicalMemory, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
 			double usedBySystem = total - available;
 
 			double usedByCurrentProcess = MemoryConverter.Convert(Process.GetCurrentProcess().WorkingSet64, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
@@ -42,34 +47,35 @@ namespace Sashiko.SystemMonitor.Monitoring
 		}
 
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-		private struct MEMORYSTATUSEX
+		private struct MemoryStatusEx
 		{
-			public uint dwLength;
-			public uint dwMemoryLoad;
-			public ulong ullTotalPhys;
-			public ulong ullAvailPhys;
-			public ulong ullTotalPageFile;
-			public ulong ullAvailPageFile;
-			public ulong ullTotalVirtual;
-			public ulong ullAvailVirtual;
-			public ulong ullAvailExtendedVirtual;
+			public uint Length;
+			public uint MemoryLoad;
+			public ulong TotalPhysicalMemory;
+			public ulong AvailablePhysicalMemory;
+			public ulong TotalPageFile;
+			public ulong AvailablePageFile;
+			public ulong TotalVirtual;
+			public ulong AvailableVirtual;
+			public ulong AvailableExtendedVirtual;
 
-			public MEMORYSTATUSEX()
+			public MemoryStatusEx()
 			{
-				dwLength = (uint)Marshal.SizeOf(typeof(MEMORYSTATUSEX));
-				dwMemoryLoad = 0;
-				ullTotalPhys = 0;
-				ullAvailPhys = 0;
-				ullTotalPageFile = 0;
-				ullAvailPageFile = 0;
-				ullTotalVirtual = 0;
-				ullAvailVirtual = 0;
-				ullAvailExtendedVirtual = 0;
+				Length = (uint)Marshal.SizeOf<MemoryStatusEx>();
+				MemoryLoad = 0;
+				TotalPhysicalMemory = 0;
+				AvailablePhysicalMemory = 0;
+				TotalPageFile = 0;
+				AvailablePageFile = 0;
+				TotalVirtual = 0;
+				AvailableVirtual = 0;
+				AvailableExtendedVirtual = 0;
 			}
 		}
 
-		[DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-		private static extern bool GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
+		[LibraryImport("kernel32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static partial bool GlobalMemoryStatusEx(ref MemoryStatusEx buffer);
 
 		// ------------------------------------------------------------
 		// LINUX (/proc/meminfo)
@@ -195,7 +201,8 @@ namespace Sashiko.SystemMonitor.Monitoring
 				if (line.StartsWith("page size of"))
 				{
 					var parts = line.Split(' ');
-					long.TryParse(parts[3], out pageSize);
+					if (!long.TryParse(parts[3], out pageSize))
+						pageSize = 4096;
 				}
 			}
 

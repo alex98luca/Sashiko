@@ -5,28 +5,34 @@ using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
 {
-	public static class CpuMonitor
+	public static partial class CpuMonitor
 	{
+		private const string UnknownCpuModel = "Unknown CPU";
+		private const double UnknownClockGHz = 0;
+
 		// Cached values for CPU load calculation
 		private static ulong _prevIdle;
 		private static ulong _prevTotal;
 
 		public static CpuInfo GetInfo()
 		{
-			var model = DetectModel();
-			var physical = DetectPhysicalCores();
+			return GetInfo(SystemPlatform.Current);
+		}
+
+		internal static CpuInfo GetInfo(SystemPlatform platform)
+		{
+			var model = DetectModel(platform);
+			var physical = DetectPhysicalCores(platform);
 			var logical = Environment.ProcessorCount;
-			var load = DetectCpuLoad();
-			var baseClock = DetectBaseClock();
-			var currentClock = DetectCurrentClock();
+			var load = DetectCpuLoad(platform);
 
 			return new CpuInfo(
 				model,
 				physical,
 				logical,
 				load,
-				baseClock,
-				currentClock
+				UnknownClockGHz,
+				UnknownClockGHz
 			);
 		}
 
@@ -34,33 +40,36 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// CPU Model
 		// ------------------------------------------------------------
 
-		private static string DetectModel()
+		private static string DetectModel(SystemPlatform platform)
 		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			if (platform.IsWindows)
 				return WindowsCpuModel();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			if (platform.IsLinux)
 				return LinuxCpuModel();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (platform.IsMacOS)
 				return MacCpuModel();
 
-			return "Unknown CPU";
+			return UnknownCpuModel;
 		}
 
 		private static string WindowsCpuModel()
 		{
 			try
 			{
+				if (!OperatingSystem.IsWindows())
+					return UnknownCpuModel;
+
 				using var key = Registry.LocalMachine.OpenSubKey(
 					@"HARDWARE\DESCRIPTION\System\CentralProcessor\0");
 
 				return key?.GetValue("ProcessorNameString")?.ToString()?.Trim()
-					   ?? "Unknown CPU";
+					   ?? UnknownCpuModel;
 			}
 			catch
 			{
-				return "Unknown CPU";
+				return UnknownCpuModel;
 			}
 		}
 
@@ -71,11 +80,11 @@ namespace Sashiko.SystemMonitor.Monitoring
 				var line = File.ReadLines("/proc/cpuinfo")
 					.FirstOrDefault(l => l.StartsWith("model name"));
 
-				return line?.Split(':')[1].Trim() ?? "Unknown CPU";
+				return line?.Split(':')[1].Trim() ?? UnknownCpuModel;
 			}
 			catch
 			{
-				return "Unknown CPU";
+				return UnknownCpuModel;
 			}
 		}
 
@@ -92,11 +101,11 @@ namespace Sashiko.SystemMonitor.Monitoring
 				});
 
 				var output = process?.StandardOutput.ReadToEnd()?.Trim();
-				return string.IsNullOrWhiteSpace(output) ? "Unknown CPU" : output;
+				return string.IsNullOrWhiteSpace(output) ? UnknownCpuModel : output;
 			}
 			catch
 			{
-				return "Unknown CPU";
+				return UnknownCpuModel;
 			}
 		}
 
@@ -104,15 +113,15 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// Physical Cores
 		// ------------------------------------------------------------
 
-		private static int DetectPhysicalCores()
+		private static int DetectPhysicalCores(SystemPlatform platform)
 		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			if (platform.IsWindows)
 				return Environment.ProcessorCount; // refined later
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			if (platform.IsLinux)
 				return LinuxPhysicalCores();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (platform.IsMacOS)
 				return MacPhysicalCores();
 
 			return Environment.ProcessorCount;
@@ -156,26 +165,27 @@ namespace Sashiko.SystemMonitor.Monitoring
 		// CPU Load (Non-blocking, No Sleep)
 		// ------------------------------------------------------------
 
-		private static double DetectCpuLoad()
+		private static double DetectCpuLoad(SystemPlatform platform)
 		{
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			if (platform.IsWindows)
 				return WindowsCpuLoad();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+			if (platform.IsLinux)
 				return LinuxCpuLoad();
 
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			if (platform.IsMacOS)
 				return MacCpuLoad();
 
 			return 0;
 		}
 
 		// WINDOWS: Use GetSystemTimes (fast, no sleep)
-		[DllImport("kernel32.dll", SetLastError = true)]
-		private static extern bool GetSystemTimes(
-			out FILETIME idleTime,
-			out FILETIME kernelTime,
-			out FILETIME userTime);
+		[LibraryImport("kernel32.dll", SetLastError = true)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static partial bool GetSystemTimes(
+			out FileTime idleTime,
+			out FileTime kernelTime,
+			out FileTime userTime);
 
 		private static double WindowsCpuLoad()
 		{
@@ -256,25 +266,18 @@ namespace Sashiko.SystemMonitor.Monitoring
 			}
 		}
 
-		// ------------------------------------------------------------
-		// Clock Speeds (future)
-		// ------------------------------------------------------------
-
-		private static double DetectBaseClock() => 0;
-		private static double DetectCurrentClock() => 0;
 	}
 
-	// Helper for Windows FILETIME
 	internal static class FileTimeExtensions
 	{
-		public static ulong ToUInt64(this FILETIME ft)
-			=> ((ulong)ft.dwHighDateTime << 32) | (uint)ft.dwLowDateTime;
+		public static ulong ToUInt64(this FileTime fileTime)
+			=> ((ulong)fileTime.HighDateTime << 32) | fileTime.LowDateTime;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
-	internal struct FILETIME
+	internal struct FileTime
 	{
-		public uint dwLowDateTime;
-		public uint dwHighDateTime;
+		public uint LowDateTime;
+		public uint HighDateTime;
 	}
 }
