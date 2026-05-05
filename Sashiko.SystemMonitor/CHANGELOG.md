@@ -5,6 +5,21 @@ The format follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.1.3-alpha] - 2026-05-05
+
+### Improved
+- Replaced the internal SystemMonitor platform detector with the shared `Sashiko.Core` runtime environment model.
+- Moved Windows native interop calls into a dedicated internal wrapper, keeping monitor classes focused on monitoring logic.
+- Removed source-generator `partial` requirements from the monitor classes themselves.
+
+### Packaging
+- Updated the package to depend on `Sashiko.Core` 0.4.0.
+
+### Notes
+This alpha builds on the 0.1.2 cleanup by aligning runtime detection with the wider Sashiko ecosystem.
+
+---
+
 ## [0.1.2-alpha] - 2026-05-04
 
 ### Improved

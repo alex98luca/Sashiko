@@ -8,7 +8,7 @@
 
 		<!-- NuGet package metadata -->
 		<PackageId>Sashiko.SystemMonitor</PackageId>
-		<Version>0.1.2-alpha</Version>
+		<Version>0.1.3-alpha</Version>
 		<Authors>Alexandru Luca (alex98luca)</Authors>
 		<Description>
 			Cross-platform system snapshot library for .NET. Provides operating system, CPU,
@@ -43,7 +43,7 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="Sashiko.Core" Version="0.3.1" />
+		<PackageReference Include="Sashiko.Core" Version="0.4.0" />
 	</ItemGroup>
 
 </Project>

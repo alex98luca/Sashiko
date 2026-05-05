@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Sashiko.Core.Environment;
 using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
@@ -8,18 +9,18 @@ namespace Sashiko.SystemMonitor.Monitoring
 	{
 		public static ThermalInfo GetInfo()
 		{
-			return GetInfo(SystemPlatform.Current);
+			return GetInfo(RuntimeInfo.Current);
 		}
 
-		internal static ThermalInfo GetInfo(SystemPlatform platform)
+		internal static ThermalInfo GetInfo(RuntimeContext runtime)
 		{
-			if (platform.IsLinux)
+			if (runtime.IsLinux)
 				return GetLinuxThermals();
 
-			if (platform.IsWindows)
+			if (runtime.IsWindows)
 				return GetWindowsThermals();
 
-			if (platform.IsMacOS)
+			if (runtime.IsMacOS)
 				return GetMacThermals();
 
 			return new ThermalInfo(0, 0, 0, false);

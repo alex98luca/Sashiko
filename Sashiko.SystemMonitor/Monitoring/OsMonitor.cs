@@ -1,4 +1,5 @@
-﻿using Sashiko.SystemMonitor.Models;
+﻿using Sashiko.Core.Environment;
+using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
 {
@@ -6,10 +7,10 @@ namespace Sashiko.SystemMonitor.Monitoring
 	{
 		public static OsInfo GetInfo()
 		{
-			return GetInfo(SystemPlatform.Current);
+			return GetInfo(RuntimeInfo.Current);
 		}
 
-		internal static OsInfo GetInfo(SystemPlatform platform)
-			=> new OsInfo(platform.Family, platform.Version, platform.ArchitectureName, platform.IsMobile);
+		internal static OsInfo GetInfo(RuntimeContext runtime)
+			=> new OsInfo(runtime.FamilyName, runtime.Version, runtime.ArchitectureName, runtime.IsMobile);
 	}
 }

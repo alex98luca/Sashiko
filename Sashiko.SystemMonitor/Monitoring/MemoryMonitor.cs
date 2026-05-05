@@ -1,88 +1,52 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
 using Sashiko.Core.Conversions;
+using Sashiko.Core.Environment;
 using Sashiko.Core.Models.Enums;
+using Sashiko.SystemMonitor.Monitoring.Native;
 using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
 {
-	public static partial class MemoryMonitor
+	public static class MemoryMonitor
 	{
 		public static MemoryInfo GetInfo()
 		{
-			return GetInfo(SystemPlatform.Current);
+			return GetInfo(RuntimeInfo.Current);
 		}
 
-		internal static MemoryInfo GetInfo(SystemPlatform platform)
+		internal static MemoryInfo GetInfo(RuntimeContext runtime)
 		{
-			if (platform.IsWindows)
+			if (runtime.IsWindows)
 				return GetWindowsMemory();
 
-			if (platform.IsLinux)
+			if (runtime.IsLinux)
 				return GetLinuxMemory();
 
-			if (platform.IsMacOS)
+			if (runtime.IsMacOS)
 				return GetMacMemory();
 
 			return new MemoryInfo(0, 0, 0, 0);
 		}
 
-		// ------------------------------------------------------------
-		// WINDOWS (GlobalMemoryStatusEx)
-		// ------------------------------------------------------------
-
 		[ExcludeFromCodeCoverage(Justification = "Requires Windows native memory APIs.")]
 		private static MemoryInfo GetWindowsMemory()
 		{
 			var mem = new MemoryStatusEx();
-			if (!GlobalMemoryStatusEx(ref mem))
+			if (!WindowsNativeMethods.GlobalMemoryStatusEx(ref mem))
 				return new MemoryInfo(0, 0, 0, 0);
 
 			double total = MemoryConverter.Convert(mem.TotalPhysicalMemory, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
 			double available = MemoryConverter.Convert(mem.AvailablePhysicalMemory, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
 			double usedBySystem = total - available;
-
-			double usedByCurrentProcess = MemoryConverter.Convert(Process.GetCurrentProcess().WorkingSet64, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
+			double usedByCurrentProcess = MemoryConverter.Convert(
+				Process.GetCurrentProcess().WorkingSet64,
+				MemoryUnit.Bytes,
+				MemoryUnit.Gigabytes
+			);
 
 			return new MemoryInfo(total, available, usedBySystem, usedByCurrentProcess);
 		}
-
-		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-		private struct MemoryStatusEx
-		{
-			public uint Length;
-			public uint MemoryLoad;
-			public ulong TotalPhysicalMemory;
-			public ulong AvailablePhysicalMemory;
-			public ulong TotalPageFile;
-			public ulong AvailablePageFile;
-			public ulong TotalVirtual;
-			public ulong AvailableVirtual;
-			public ulong AvailableExtendedVirtual;
-
-			public MemoryStatusEx()
-			{
-				Length = (uint)Marshal.SizeOf<MemoryStatusEx>();
-				MemoryLoad = 0;
-				TotalPhysicalMemory = 0;
-				AvailablePhysicalMemory = 0;
-				TotalPageFile = 0;
-				AvailablePageFile = 0;
-				TotalVirtual = 0;
-				AvailableVirtual = 0;
-				AvailableExtendedVirtual = 0;
-			}
-		}
-
-		[LibraryImport("kernel32.dll", SetLastError = true)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[ExcludeFromCodeCoverage(Justification = "Source-generated Windows native interop.")]
-		private static partial bool GlobalMemoryStatusEx(ref MemoryStatusEx buffer);
-
-		// ------------------------------------------------------------
-		// LINUX (/proc/meminfo)
-		// ------------------------------------------------------------
 
 		[ExcludeFromCodeCoverage(Justification = "Requires Linux /proc/meminfo.")]
 		private static MemoryInfo GetLinuxMemory()
@@ -91,7 +55,6 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				var memInfo = File.ReadAllLines("/proc/meminfo");
 
-				// Values in kB → convert to bytes → convert to GB
 				double total = MemoryConverter.Convert(
 					ParseMeminfo(memInfo, "MemTotal") * 1024,
 					MemoryUnit.Bytes,
@@ -105,7 +68,6 @@ namespace Sashiko.SystemMonitor.Monitoring
 				);
 
 				double usedBySystem = total - available;
-
 				double usedByCurrentProcess = MemoryConverter.Convert(
 					Process.GetCurrentProcess().WorkingSet64,
 					MemoryUnit.Bytes,
@@ -128,10 +90,6 @@ namespace Sashiko.SystemMonitor.Monitoring
 			var parts = line.Split(':')[1].Trim().Split(' ')[0];
 			return double.TryParse(parts, out var kb) ? kb : 0;
 		}
-
-		// ------------------------------------------------------------
-		// MACOS (sysctl + vm_stat)
-		// ------------------------------------------------------------
 
 		[ExcludeFromCodeCoverage(Justification = "Requires macOS memory tooling.")]
 		private static MemoryInfo GetMacMemory()
@@ -169,12 +127,9 @@ namespace Sashiko.SystemMonitor.Monitoring
 
 			var output = process?.StandardOutput.ReadToEnd()?.Trim();
 
-			if (ulong.TryParse(output, out var bytes))
-			{
-				return MemoryConverter.Convert(bytes, MemoryUnit.Bytes, MemoryUnit.Gigabytes);
-			}
-
-			return 0;
+			return ulong.TryParse(output, out var bytes)
+				? MemoryConverter.Convert(bytes, MemoryUnit.Bytes, MemoryUnit.Gigabytes)
+				: 0;
 		}
 
 		[ExcludeFromCodeCoverage(Justification = "Requires macOS vm_stat.")]
