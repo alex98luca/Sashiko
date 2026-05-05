@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Sashiko.SystemMonitor.Monitoring;
+using Sashiko.SystemMonitor.Monitoring.Native;
 
 namespace Sashiko.SystemMonitor.Tests.Monitoring
 {
@@ -21,10 +22,7 @@ namespace Sashiko.SystemMonitor.Tests.Monitoring
 		[Fact]
 		public void MemoryStatusEx_ShouldInitializeLength()
 		{
-			var statusType = typeof(MemoryMonitor).GetNestedType(
-				"MemoryStatusEx",
-				BindingFlags.NonPublic
-			);
+			var statusType = typeof(MemoryStatusEx);
 
 			Assert.NotNull(statusType);
 
