@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Sashiko.Core.Environment;
 using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
@@ -10,18 +11,18 @@ namespace Sashiko.SystemMonitor.Monitoring
 
 		public static GpuInfo GetInfo()
 		{
-			return GetInfo(SystemPlatform.Current);
+			return GetInfo(RuntimeInfo.Current);
 		}
 
-		internal static GpuInfo GetInfo(SystemPlatform platform)
+		internal static GpuInfo GetInfo(RuntimeContext runtime)
 		{
-			if (platform.IsWindows)
+			if (runtime.IsWindows)
 				return GetWindowsGpu();
 
-			if (platform.IsLinux)
+			if (runtime.IsLinux)
 				return GetLinuxGpu();
 
-			if (platform.IsMacOS)
+			if (runtime.IsMacOS)
 				return GetMacGpu();
 
 			return UnknownGpu();

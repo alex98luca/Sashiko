@@ -1,26 +1,27 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
+using Sashiko.Core.Environment;
+using Sashiko.SystemMonitor.Monitoring.Native;
 using Sashiko.SystemMonitor.Models;
 
 namespace Sashiko.SystemMonitor.Monitoring
 {
-	public static partial class PowerMonitor
+	public static class PowerMonitor
 	{
 		public static PowerInfo GetInfo()
 		{
-			return GetInfo(SystemPlatform.Current);
+			return GetInfo(RuntimeInfo.Current);
 		}
 
-		internal static PowerInfo GetInfo(SystemPlatform platform)
+		internal static PowerInfo GetInfo(RuntimeContext runtime)
 		{
-			if (platform.IsWindows)
+			if (runtime.IsWindows)
 				return GetWindowsPower();
 
-			if (platform.IsLinux)
+			if (runtime.IsLinux)
 				return GetLinuxPower();
 
-			if (platform.IsMacOS)
+			if (runtime.IsMacOS)
 				return GetMacPower();
 
 			return new PowerInfo(true, 100, false);
@@ -35,7 +36,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 		{
 			try
 			{
-				if (!GetSystemPowerStatus(out var status))
+				if (!WindowsNativeMethods.GetSystemPowerStatus(out var status))
 					return new PowerInfo(true, 100, false);
 
 				bool plugged = status.ACLineStatus == 1;
@@ -49,22 +50,6 @@ namespace Sashiko.SystemMonitor.Monitoring
 				return new PowerInfo(true, 100, false);
 			}
 		}
-
-		[StructLayout(LayoutKind.Sequential)]
-		private struct SystemPowerStatus
-		{
-			public byte ACLineStatus;
-			public byte BatteryFlag;
-			public byte BatteryLifePercent;
-			public byte SystemStatusFlag;
-			public uint BatteryLifeTime;
-			public uint BatteryFullLifeTime;
-		}
-
-		[LibraryImport("kernel32.dll")]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		[ExcludeFromCodeCoverage(Justification = "Source-generated Windows native interop.")]
-		private static partial bool GetSystemPowerStatus(out SystemPowerStatus status);
 
 		// ------------------------------------------------------------
 		// LINUX (/sys/class/power_supply)
