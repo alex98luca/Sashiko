@@ -57,7 +57,7 @@ SystemMonitor uses built-in operating system APIs and command-line probes only. 
 - Linux support can read richer `/proc` and `/sys` data when those virtual files are exposed by the host.
 - macOS support uses native command-line tools where available, with thermal data planned for a future collector.
 
-The operating system is detected once per process and reused by the snapshot pipeline, keeping repeated captures lighter and more predictable.
+The operating system is detected once per process through `Sashiko.Core` runtime metadata and reused by the snapshot pipeline, keeping repeated captures lighter and more predictable.
 
 ---
 
