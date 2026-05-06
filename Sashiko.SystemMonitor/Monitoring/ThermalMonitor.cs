@@ -111,7 +111,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				var process = Process.Start(new ProcessStartInfo
 				{
-					FileName = "nvidia-smi",
+					FileName = SystemCommandPaths.LinuxNvidiaSmi,
 					Arguments = "--query-gpu=temperature.gpu --format=csv,noheader",
 					RedirectStandardOutput = true,
 					UseShellExecute = false

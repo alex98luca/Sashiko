@@ -21,6 +21,20 @@ namespace Sashiko.SystemMonitor.Tests.Monitoring
 		}
 
 		[Theory]
+		[InlineData("00:02.0 \"VGA compatible controller\" \"Intel Corporation\"", true)]
+		[InlineData("01:00.0 \"3D controller\" \"NVIDIA Corporation\"", true)]
+		[InlineData("02:00.0 \"Display controller\" \"Advanced Micro Devices\"", true)]
+		[InlineData("00:1f.3 \"Audio device\" \"Intel Corporation\"", false)]
+		public void GpuMonitor_ShouldDetectLinuxDisplayDevice(string line, bool expectedResult)
+		{
+			Assert.Equal(expectedResult, InvokePrivate<bool>(
+				typeof(GpuMonitor),
+				"IsLinuxDisplayDevice",
+				line
+			));
+		}
+
+		[Theory]
 		[InlineData("VRAM: 2 GB", "VRAM", "2 GB")]
 		[InlineData("Chipset Model: Apple M3", "Chipset Model", "Apple M3")]
 		[InlineData("Vendor: Apple", "Vendor", "Apple")]

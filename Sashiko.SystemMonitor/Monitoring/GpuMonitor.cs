@@ -41,7 +41,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				var process = Process.Start(new ProcessStartInfo
 				{
-					FileName = "dxdiag",
+					FileName = SystemCommandPaths.WindowsDxDiag,
 					Arguments = $"/t \"{outputPath}\"",
 					UseShellExecute = false,
 					CreateNoWindow = true
@@ -94,13 +94,16 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				var process = Process.Start(new ProcessStartInfo
 				{
-					FileName = "sh",
-					Arguments = "-c \"lspci -mm | grep -i 'vga'\"",
+					FileName = SystemCommandPaths.LinuxLspci,
+					Arguments = "-mm",
 					RedirectStandardOutput = true,
 					UseShellExecute = false
 				});
 
-				var output = process?.StandardOutput.ReadToEnd()?.Trim();
+				var output = process?.StandardOutput.ReadToEnd()?
+					.Split('\n')
+					.FirstOrDefault(IsLinuxDisplayDevice)
+					?.Trim();
 
 				if (string.IsNullOrWhiteSpace(output))
 					return UnknownGpu();
@@ -126,6 +129,13 @@ namespace Sashiko.SystemMonitor.Monitoring
 				line.Contains("ATI", StringComparison.OrdinalIgnoreCase)) return "AMD";
 			if (line.Contains("Intel", StringComparison.OrdinalIgnoreCase)) return "Intel";
 			return UnknownGpuValue;
+		}
+
+		private static bool IsLinuxDisplayDevice(string line)
+		{
+			return line.Contains("VGA", StringComparison.OrdinalIgnoreCase) ||
+				line.Contains("Display", StringComparison.OrdinalIgnoreCase) ||
+				line.Contains("3D", StringComparison.OrdinalIgnoreCase);
 		}
 
 		[ExcludeFromCodeCoverage(Justification = "Requires host GPU sysfs driver support.")]
@@ -168,7 +178,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				var process = Process.Start(new ProcessStartInfo
 				{
-					FileName = "system_profiler",
+					FileName = SystemCommandPaths.MacSystemProfiler,
 					Arguments = "SPDisplaysDataType",
 					RedirectStandardOutput = true,
 					UseShellExecute = false
