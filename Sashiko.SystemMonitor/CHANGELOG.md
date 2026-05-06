@@ -5,6 +5,14 @@ The format follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Fixed
+- Replaced `PATH`-resolved system command launches with fixed executable paths to resolve Sonar security hotspot findings.
+- Removed the Linux GPU shell pipeline and now filters `lspci` output in managed code.
+
+---
+
 ## [0.1.3-alpha] - 2026-05-05
 
 ### Improved

@@ -111,7 +111,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				var process = Process.Start(new ProcessStartInfo
 				{
-					FileName = "pmset",
+					FileName = SystemCommandPaths.MacPmset,
 					Arguments = "-g batt",
 					RedirectStandardOutput = true,
 					UseShellExecute = false

@@ -94,7 +94,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				var process = Process.Start(new ProcessStartInfo
 				{
-					FileName = "sysctl",
+					FileName = SystemCommandPaths.MacSysctl,
 					Arguments = "-n machdep.cpu.brand_string",
 					RedirectStandardOutput = true,
 					UseShellExecute = false
@@ -144,7 +144,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				var process = Process.Start(new ProcessStartInfo
 				{
-					FileName = "sysctl",
+					FileName = SystemCommandPaths.MacSysctl,
 					Arguments = "-n hw.physicalcpu",
 					RedirectStandardOutput = true,
 					UseShellExecute = false
@@ -235,7 +235,7 @@ namespace Sashiko.SystemMonitor.Monitoring
 			{
 				var process = Process.Start(new ProcessStartInfo
 				{
-					FileName = "ps",
+					FileName = SystemCommandPaths.MacPs,
 					Arguments = "-A -o %cpu",
 					RedirectStandardOutput = true,
 					UseShellExecute = false
