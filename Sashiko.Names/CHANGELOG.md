@@ -5,6 +5,18 @@ The format follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.2.1] - 2026-08-14
+
+### Changed
+- Refreshed package metadata through the centralized public Sashiko package settings.
+- Aligned the package with the official lightweight NuGet icon asset already used by **Sashiko.Core**.
+- Updated internal Sashiko dependencies to **Sashiko.Core** `0.4.1` and **Sashiko.Registries** `0.1.2`.
+
+### Notes
+This patch release does not change public APIs, generation behavior, or the embedded name dataset.
+
+---
+
 ## [0.2.0] - 2026-05-18
 
 ### Added
