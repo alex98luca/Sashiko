@@ -7,9 +7,21 @@ The format follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+---
+
+## [0.1.4-alpha] - 2026-08-14
+
 ### Fixed
 - Replaced `PATH`-resolved system command launches with fixed executable paths to resolve Sonar security hotspot findings.
 - Removed the Linux GPU shell pipeline and now filters `lspci` output in managed code.
+
+### Packaging
+- Refreshed package metadata through the centralized public Sashiko package settings.
+- Aligned the package with the official lightweight NuGet icon asset already used by **Sashiko.Core**.
+- Updated the package to depend on `Sashiko.Core` `0.4.1`.
+
+### Notes
+This release keeps **Sashiko.SystemMonitor** on the alpha track while its long-term scope in the Sashiko ecosystem continues to evolve.
 
 ---
 
