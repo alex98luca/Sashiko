@@ -7,6 +7,12 @@ The maintenance tool is not versioned or published as a NuGet package.
 
 ---
 
+## 2026-08-14
+### Changed
+- Updated the internal Sashiko.Core dependency to `0.4.1` so solution restore stays aligned with the latest registry packages.
+
+---
+
 ## 2026-05-04
 ### Improved
 - Resolved SonarQube/Roslyn findings in the maintenance entry point, language updater, name pool polisher, and command tests.
